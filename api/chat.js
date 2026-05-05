@@ -3,7 +3,7 @@ const path = require('path');
 
 // Groq API configuration – set GROQ_API_KEY in Vercel environment variables
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'llama-3.3-70b-versatile';
+const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 // Optimized system prompt with full grounding, warmth, and proactive guidance
@@ -120,29 +120,56 @@ module.exports = async function handler(req, res) {
     // Finally add the actual user message
     messages.push({ role: 'user', content: message });
 
-    // Call Groq API
-    const response = await fetch(GROQ_API_URL, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: GROQ_MODEL,
-        messages: messages,
-        temperature: 0.3,
-        max_tokens: 3500,
-      }),
-    });
+    // Call Groq API with fallback models
+    let reply = null;
+    let lastError = null;
 
-    if (!response.ok) {
-      const err = await response.json();
-      console.error('Groq API error:', err);
-      return res.status(500).json({ error: 'Groq API error', details: err });
+    for (const model of GROQ_MODELS) {
+      try {
+        const response = await fetch(GROQ_API_URL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${GROQ_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: messages,
+            temperature: 0.3,
+            max_tokens: 3500,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          reply = data.choices[0].message.content;
+          break; // Success, exit loop
+        }
+
+        const errorData = await response.json();
+        lastError = errorData;
+        const isRateLimit = errorData?.error?.code === 'rate_limit_exceeded';
+        
+        if (!isRateLimit) {
+          // Non-rate-limit error – stop and report
+          console.error(`Groq API error with ${model}:`, errorData);
+          return res.status(500).json({ error: 'Groq API error', details: errorData });
+        }
+        // Rate limit: try next model
+        console.log(`Model ${model} rate limited, trying next...`);
+      } catch (err) {
+        lastError = err;
+        console.error(`Request error with ${model}:`, err);
+      }
     }
 
-    const data = await response.json();
-    const reply = data.choices[0].message.content;
+    if (!reply) {
+      // All models exhausted (rate limits)
+      return res.status(503).json({ 
+        error: 'All models are currently rate limited. Please try again in a few hours.',
+        details: lastError
+      });
+    }
 
     // Return the reply to the frontend
     return res.status(200).json({ reply });

@@ -1255,7 +1255,11 @@ Tafadhali toa maelezo zaidi kuhusu huduma gani unayohitaji msaada? Ninafurahi ku
 
         // Call the real RAG backend
         async function sendToHudumaAI(userMessage) {
-            const response = await fetch('/api/chat', {
+            // Use deployed URL - change to '/api/chat' for production or when both frontend and backend are on same domain
+            const apiUrl = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+                ? 'https://huduma-jcie0baeh-netz1-blips-projects.vercel.app/api/chat'
+                : '/api/chat';
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: userMessage })

@@ -1,42 +1,62 @@
 [
   {
-    "file": "Service-01-National -ID.md",
-    "keywords": ["national id", "id card", "maisha card", "id application", "lost id", "new id"]
+    "file": "national-id.md",
+    "keywords": [
+      "national id", "national id card", "id card", "kitambulisho", "kitambulisho cha taifa", "national identity", "identity card", "national identification", "maisha card", "new id", "id application", "replace lost id", "lost id", "damaged id", "first id", "id renewal", "id fees", "kid", "id card fees", "national id requirements", "national id documents", "national id age", "national id for minors"
+    ]
   },
   {
-    "file": "Service-02-SHA.md",
-    "keywords": ["sha", "social health authority", "nhif", "health insurance", "shif", "afya yangu"]
+    "file": "sha.md",
+    "keywords": [
+      "sha", "social health authority", "social health insurance", "new health insurance", "afya", "bima ya afya", "health fund", "sha benefits", "sha registration", "sha contributions", "sha card", "sha cover", "nhif replacement", "what is sha", "how to register for sha", "sha rates", "sha dependants", "sha payment", "sha portal"
+    ]
   },
   {
-    "file": "Service-03-KRA Pin.md",
-    "keywords": ["kra", "kra pin", "pin", "tax pin", "itax", "pwo"]
+    "file": "kra-pin.md",
+    "keywords": [
+      "kra pin", "kra", "pin certificate", "tax pin", "kra registration", "income tax pin", "vat pin", "kra pin application", "get kra pin", "kra pin for job", "kra pin for business", "kra pin for helb", "kra pin fees", "kra pin documents", "how to get kra pin", "kra itax", "kra pin replacement", "lost kra pin", "kra pin email", "kra pin for minors"
+    ]
   },
   {
-    "file": "Service-04-Passport.md",
-    "keywords": ["passport", "e-passport", "travel document", "immigration", "nyayo house"]
+    "file": "passport.md",
+    "keywords": [
+      "passport", "east african passport", "kenyan passport", "ordinary passport", "diplomatic passport", "service passport", "passport application", "passport renewal", "lost passport", "passport fees", "passport requirements", "passport processing time", "e-passport", "passport tracking", "passport status", "kid passport", "minor passport", "passport for child", "how to apply for passport", "passport appointment", "nyayo house passport", "immigration passport"
+    ]
   },
   {
-    "file": "Service-05-NSSF.md",
-    "keywords": ["nssf", "social security", "pension", "retirement", "haba haba"]
+    "file": "nssf.md",
+    "keywords": [
+      "nssf", "national social security fund", "social security", "pension", "nssf contributions", "nssf registration", "nssf benefits", "nssf statement", "nssf rates", "nssf tier 1", "nssf tier 2", "nssf online", "nssf portal", "nssf card", "nssf claim", "how to register nssf", "nssf penalties", "nssf for employers", "nssf for self employed", "nssf lump sum", "nssf withdrawal"
+    ]
   },
   {
-    "file": "Service-06-Birth Certificate.md",
-    "keywords": ["birth certificate", "birth registration", "late registration", "birth cert"]
+    "file": "birth-certificate.md",
+    "keywords": [
+      "birth certificate", "cheti cha kuzaliwa", "birth registration", "birth notification", "newborn registration", "late birth registration", "birth certificate fees", "birth certificate requirements", "how to get birth certificate", "lost birth certificate", "replacement birth certificate", "copy of birth certificate", "birth certificate for passport", "birth certificate for id", "birth certificate for school", "birth certificate age", "amended birth certificate", "adoption birth certificate"
+    ]
   },
   {
-    "file": "Service-07-DrivingLicense.md",
-    "keywords": ["driving licence", "driving license", "smart dl", "ntsa", "pdl", "driving test"]
+    "file": "driving-licence.md",
+    "keywords": [
+      "driving licence", "driver license", "leseni ya kuendesha", "dl", "driving permit", "learners licence", "provisional licence", "driving test", "driving licence application", "driving licence renewal", "lost driving licence", "replacement driving licence", "driving licence fees", "driving licence classes", "driving licence requirements", "ntsa driving licence", "driving school", "endorsement", "international driving permit", "dl portal"
+    ]
   },
   {
-    "file": "Service-08-Business Registration.md",
-    "keywords": ["business", "company", "registration", "brs", "e-citizen", "incorporation"]
+    "file": "business-registration.md",
+    "keywords": [
+      "business registration", "company registration", "register a business", "e-citizen business", "business name registration", "limited company", "ltd registration", "partnership registration", "sole proprietorship", "business permit", "certificate of incorporation", "cac business registration", "how to register a business in kenya", "business registration fees", "business registration documents", "online business registration", "biz registration", "start a company", "business renewal", "business search"
+    ]
   },
   {
-    "file": "Service -09-HELB.md",
-    "keywords": ["helb", "higher education loans", "student loan", "tvet loan", "jielimishe"]
+    "file": "helb.md",
+    "keywords": [
+      "helb", "higher education loans board", "helb loan", "helb application", "helb portal", "helb login", "helb first time", "helb continuing students", "helb funding", "helb repayment", "helb statement", "helb clearance", "helb deferment", "helb loan balance", "how to apply for helb", "helb requirements", "helb forms", "helb contacts", "helb beneficiary", "helb status", "helb allocation", "helb appeal"
+    ]
   },
   {
-    "file": "Service-Good Conduct.md",
-    "keywords": ["police clearance", "good conduct", "dci", "fingerprinting", "pcc"]
+    "file": "police-clearance.md",
+    "keywords": [
+      "police clearance", "certificate of good conduct", "good conduct", "police certificate", "dci clearance", "criminal record check", "background check", "police clearance fees", "police clearance application", "how to get police clearance", "good conduct online", "e citizen police clearance", "dci good conduct", "police clearance for job", "police clearance for travel", "police clearance for visa", "police clearance for adoption", "police clearance processing time", "police clearance tracking", "good conduct validity", "police clearance for foreigners"
+    ]
   }
 ]

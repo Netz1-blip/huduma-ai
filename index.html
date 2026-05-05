@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#004d40">
+    <title>Huduma AI - Verified Government Services Assistant</title>
+    <style>
+        /* ============================================
+           CSS VARIABLES & RESET
+           ============================================ */
+        :root {
+            /* Colors */
+            --primary-green: #004d40;
+            --primary-dark: #00352c;
+            --kenya-black: #000000;
+            --kenya-red: #BB1E10;
+            --kenya-green: #006600;
+            --bg-white: #ffffff;
+            --bg-grey: #f9fafb;
+            --chat-bot: #f3f4f6;
+            --chat-user: #dff6ec;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-light: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --glow-green: 0 0 20px rgba(0, 77, 64, 0.15);
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-lg: 1.125rem;
+            --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-slow: 350ms ease;
+            
+            /* Layout */
+            --header-height: 80px;
+            --input-height: 80px;
+            --max-width: 800px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --radius-full: 9999px;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--bg-grey);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Focus visible styles */
+        :focus-visible {
+            outline: 3px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* ============================================
+           APP CONTAINER
+           ============================================ */
+        .app {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            background: var(--bg-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow-lg);
+        }
+
+        @media (min-width: 801px) {
+            .app {
+                min-height: calc(100vh - 2rem);
+                margin: 1rem auto;
+                border-radius: var(--radius-lg);
+                overflow: hidden;
+            }
+        }
+
+        /* ============================================
+           HEADER
+           ============================================ */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .kenya-flag-accent {
+            display: flex;
+            height: 4px;
+            width: 100%;
+        }
+
+        .kenya-flag-accent .black {
+            flex: 1;
+            background: var(--kenya-black);
+        }
+
+        .kenya-flag-accent .red {
+            flex: 1;
+            background: var(--kenya-red);
+        }
+
+        .kenya-flag-accent .green {
+            flex: 1;
+            background: var(--kenya-green);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            padding: var(--space-md) var(--space-lg);
+            height: calc(var(--header-height) - 4px);
+        }
+
+        .ai-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+
+        .ai-avatar svg {
+            width: 28px;
+            height: 28px;
+            fill: white;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #22c55e;
+            border-radius: var(--radius-full);
+            border: 2px solid white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .header-text {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .header-title {
+            font-size: var(--text-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.3;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .verified-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: var(--chat-user);
+            color: var(--primary-green);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+
+        .verified-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .header-subtitle {
+            font-size: var(--text-sm);
+            color: var(--text-secondary);
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: var(--radius-full);
+        }
+
+        /* ============================================
+           CHAT CONTAINER
+           ============================================ */
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+            scroll-behavior: smooth;
+        }
+
+        @media (min-width: 640px) {
+            .chat-container {
+                padding: var(--space-lg);
+            }
+        }
+
+        /* ============================================
+           WELCOME SECTION
+           ============================================ */
+        .welcome-section {
+            margin-bottom: var(--space-xl);
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .welcome-title {
+            font-size: var(--text-xl);
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .wave-emoji {
+            display: inline-block;
+            animation: wave 1.5s ease infinite;
+            transform-origin: 70% 70%;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        .welcome-text {
+            font-size: var(--text-base);
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .quick-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin-top: var(--space-md);
+        }
+
+        .quick-chip {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-full);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .quick-chip:hover,
+        .quick-chip:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .quick-chip:active {
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           MESSAGES
+           ============================================ */
+        .messages {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .message {
+            display: flex;
+            gap: var(--space-sm);
+            animation: messageEnter 0.3s ease;
+            max-width: 100%;
+        }
+
+        @keyframes messageEnter {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .message.user .message-avatar {
+            background: var(--chat-user);
+            color: var(--primary-green);
+        }
+
+        .message-content {
+            flex: 1;
+            min-width: 0;
+            max-width: calc(100% - 50px);
+        }
+
+        .message-bubble {
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            font-size: var(--text-base);
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message.bot .message-bubble {
+            background: var(--chat-bot);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: var(--chat-user);
+            color: var(--text-primary);
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-meta {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            margin-top: var(--space-xs);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .message.user .message-meta {
+            justify-content: flex-end;
+        }
+
+        .ai-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .ai-label svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* ============================================
+           TYPING INDICATOR
+           ============================================ */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) 0;
+        }
+
+        .typing-bubble {
+            background: var(--chat-bot);
+            padding: var(--space-md) var(--space-lg);
+            border-radius: var(--radius-md);
+            border-bottom-left-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            height: 20px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: var(--radius-full);
+            animation: typingBounce 1.4s ease infinite;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0ms; }
+        .typing-dot:nth-child(2) { animation-delay: 200ms; }
+        .typing-dot:nth-child(3) { animation-delay: 400ms; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
+        }
+
+        /* ============================================
+           INPUT AREA
+           ============================================ */
+        .input-container {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg-white);
+            border-top: 1px solid var(--border-light);
+            padding: var(--space-md);
+            padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            background: var(--bg-grey);
+            border: 2px solid transparent;
+            border-radius: var(--radius-xl);
+            padding: var(--space-sm) var(--space-md);
+            transition: all var(--transition-fast);
+        }
+
+        .input-wrapper:focus-within {
+            background: var(--bg-white);
+            border-color: var(--primary-green);
+            box-shadow: var(--glow-green);
+        }
+
+        .message-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: var(--text-base);
+            color: var(--text-primary);
+            padding: var(--space-sm) 0;
+            min-height: 24px;
+            max-height: 120px;
+            resize: none;
+            font-family: inherit;
+        }
+
+        .message-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .message-input:focus {
+            outline: none;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: var(--primary-green);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .send-button:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .send-button:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .send-button:disabled {
+            background: var(--border-light);
+            cursor: not-allowed;
+        }
+
+        .send-button svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+            margin-left: 2px;
+        }
+
+        .send-button:disabled svg {
+            fill: var(--text-secondary);
+        }
+
+        .input-hint {
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: var(--space-sm);
+        }
+
+        /* ============================================
+           UTILITY CLASSES
+           ============================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app" role="main" aria-label="Huduma AI Chat Interface">
+        <!-- Header -->
+        <header class="header" role="banner">
+            <div class="kenya-flag-accent" aria-hidden="true">
+                <div class="black"></div>
+                <div class="red"></div>
+                <div class="green"></div>
+            </div>
+            <div class="header-content">
+                <div class="ai-avatar" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                        <circle cx="12" cy="12" r="3" fill="rgba(255,255,255,0.3)"/>
+                    </svg>
+                    <span class="online-indicator" aria-hidden="true"></span>
+                </div>
+                <div class="header-text">
+                    <h1 class="header-title">
+                        Huduma AI
+                        <span class="verified-badge">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            Verified
+                        </span>
+                    </h1>
+                    <p class="header-subtitle">
+                        <span class="status-dot" aria-hidden="true"></span>
+                        <span>Verified Government Services Assistant</span>
+                    </p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer" role="region" aria-label="Chat messages" tabindex="0">
+            <!-- Welcome Section -->
+            <section class="welcome-section" aria-labelledby="welcome-heading">
+                <div class="welcome-card">
+                    <h2 id="welcome-heading" class="welcome-title">
+                        Karibu <span class="wave-emoji" aria-hidden="true">👋</span>
+                    </h2>
+                    <p class="welcome-text">
+                        Ask about Kenyan government services in English or Swahili. I'm here to help you find verified information quickly and easily.
+                    </p>
+                    <div class="quick-chips" role="list" aria-label="Quick suggestions">
+                        <button class="quick-chip" role="listitem" data-query="How do I replace a lost birth certificate?" tabindex="0">
+                            Replace Birth Certificate
+                        </button>
+                        <button class="quick-chip" role="listitem" data-query="How do I apply for a passport?" tabindex="0">
+                            Apply for Passport
+                        </button>
+                        <button class="quick-chip" role="listitem" data-query="How do I get a KRA PIN?" tabindex="0">
+                            Get KRA PIN
+                        </button>
+                        <button class="quick-chip" role="listitem" data-query="How do I register for SHA?" tabindex="0">
+                            SHA Registration
+                        </button>
+                        <button class="quick-chip" role="listitem" data-query="How do I apply for HELB loan?" tabindex="0">
+                            HELB Loan Help
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages -->
+            <div class="messages" id="messages" role="log" aria-live="polite" aria-atomic="false">
+                <!-- Messages will be inserted here -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator hidden" id="typingIndicator" aria-live="polite">
+                <div class="message-avatar" aria-hidden="true">AI</div>
+                <div class="typing-bubble">
+                    <div class="typing-dots" aria-label="Huduma AI is typing">
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                        <span class="typing-dot"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-container" role="form" aria-label="Message input">
+            <div class="input-wrapper">
+                <textarea 
+                    id="messageInput" 
+                    class="message-input" 
+                    placeholder="Ask in English or Swahili..."
+                    aria-label="Type your message"
+                    rows="1"
+                    autocomplete="off"
+                ></textarea>
+                <button 
+                    id="sendButton" 
+                    class="send-button" 
+                    aria-label="Send message"
+                    disabled
+                >
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </div>
+            <p class="input-hint">Press Enter to send • Shift+Enter for new line</p>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // MOCK RESPONSE DATABASE
+        // ============================================
+        const mockResponses = {
+            birth_certificate: {
+                english: `To replace a lost birth certificate in Kenya, follow these steps:
+
+**1. Visit the Civil Registration Department**
+• Go to the Department of Civil Registration headquarters in Nairobi, or any Huduma Centre nationwide.
+
+**2. Required Documents:**
+• Police abstract report (for lost certificate)
+• Copy of parent's national ID
+• Your national ID (if adult)
+• Affidavit sworn by a parent or guardian
+• Application fee: KSh 100-200
+
+**3. Processing Time:**
+• Approximately 7-14 working days
+• You can collect from the same office or request delivery
+
+**4. Online Option:**
+• Visit eCitizen.go.ke and search for "Birth Certificate" services
+• Fill the application form online
+• Pay via M-Pesa
+
+Would you like help with any other government service?`,
+                swahili: `Kupata cheti cha kuzaliwa kipya baada ya kukipoteza:
+
+**1. Tembelea Idara ya Usajili wa Wananchi**
+• Shiriki la Usajili wa Wananchi jijini Nairobi, au kituo chochote cha Huduma Centre
+
+**2. Nyaraka Zinazohitajika:**
+• Ripoti ya polisi (abstract) kuhusu kupoteza
+• Nakili ya kitambulisho cha mzazi
+• Kitambulisho chako (ikiwa wazima)
+• Affidavit iliyotiwa saini na mzazi au mlezi
+• Ada ya maombi: KSh 100-200
+
+**3. Muda wa Usindikaji:**
+• Siku 7-14 za kazi
+• Unaweza kuchukua katika ofisi hiyo hiyo au kupitia utoaji
+
+**4. Chaguo la Mtandao:**
+• Tembelea eCitizen.go.ke
+• Tafuta huduma za "Birth Certificate"
+• Jaza fomu na lipa kupitia M-Pesa
+
+Je, unahitaji msaada kwa huduma nyingine za serikali?`
+            },
+            passport: {
+                english: `Here's how to apply for a Kenyan passport:
+
+**Application Steps:**
+
+**1. Create eCitizen Account**
+• Visit eCitizen.go.ke
+• Register with your email and phone number
+
+**2. Online Application**
+• Login and select "Immigration Services"
+• Choose passport type:
+  - 32-page (KSh 4,550)
+  - 48-page (KSh 6,050)
+  - Diplomatic (Government officials only)
+
+**3. Required Documents:**
+• Original birth certificate
+• National ID card
+• Passport-sized photos (taken at Immigration office)
+• Recommender's ID copy (must be a professional)
+• Old passport (for renewal)
+
+**4. Biometric Capture**
+• Book appointment at Immigration office
+• Visit for photo and fingerprint capture
+
+**5. Collection:**
+• Wait for SMS notification (2-4 weeks)
+• Collect at Immigration office or selected Huduma Centre
+
+Note: First-time applicants must apply in person for biometrics.`,
+                swahili: `Jinsi ya kuomba pasi ya Kenya:
+
+**Hatua za Maombi:**
+
+**1. Fungua Akaunti ya eCitizen**
+• Tembelea eCitizen.go.ke
+• Jisajili kwa email na namba ya simu
+
+**2. Maombi Mtandaoni**
+• Ingia na chagua "Immigration Services"
+• Chagua aina ya pasi:
+  - Kurasa 32 (KSh 4,550)
+  - Kurasa 48 (KSh 6,050)
+
+**3. Nyaraka Zinazohitajika:**
+• Cheti cha kuzaliwa cha asili
+• Kitambulisho cha Taifa
+• Picha za passport (zichukuliwe ofisini)
+• Nakili ya kitambulisho cha mpendekezaji
+• Pasi ya zamani (kwa wanaorenew)
+
+**4. Rekodi za Bayometriki**
+• Weka miadi katika ofisi ya Uhamiaji
+• Tembelea kwa picha na alama za vidole
+
+**5. Kukusanya:**
+• Subiri ujumbe wa SMS (wiki 2-4)
+• Chukua katika ofisi ya Uhamiaji au Huduma Centre
+
+Kumbuka: Waombaji wa mara ya kwanza lazima waende kwa umbali.`
+            },
+            kra_pin: {
+                english: `How to get your KRA PIN Certificate:
+
+**Online Registration (Recommended):**
+
+**1. Visit iTax Portal**
+• Go to itax.kra.go.ke
+• Click "New PIN Registration"
+
+**2. Select Taxpayer Type**
+• Individual (for personal PIN)
+• Company (for business PIN)
+
+**3. Fill Application Form**
+• Personal details (name, ID number, date of birth)
+• Contact information
+• Employment details (if employed)
+
+**4. Required Information:**
+• National ID number
+• Date of birth
+• Email address
+• Phone number
+• County of residence
+
+**5. Submit and Download**
+• Submit application
+• Download PIN certificate immediately
+• Print for physical copy
+
+**For Lost PIN:**
+• Login to iTax with your credentials
+• Go to "PIN Checker" or reprint certificate
+• Or visit any KRA office with your ID
+
+Need help with tax filing or other KRA services?`,
+                swahili: `Jinsi ya kupata Cheti cha PIN cha KRA:
+
+**Usajili Mtandaoni:**
+
+**1. Tembelea iTax Portal**
+• Nenda itax.kra.go.ke
+• Bonyeza "New PIN Registration"
+
+**2. Chagua Aina ya Mlipa Kodi**
+• Individual (kwa binafsi)
+• Company (kwa biashara)
+
+**3. Jaza Fomu ya Maombi**
+• Maelezo binafsi (jina, namba ya ID, tarehe ya kuzaliwa)
+• Maelezo ya mawasiliano
+• Maelezo ya ajira
+
+**4. Taarifa Zinazohitajika:**
+• Namba ya kitambulisho cha Taifa
+• Tarehe ya kuzaliwa
+• Anwani ya email
+• Namba ya simu
+• Kaunti unayoishi
+
+**5. Wasilisha na Pakua**
+• Wasilisha maombi
+• Pakua cheti cha PIN mara moja
+• Chapisha kwa nakala ya kimwili
+
+**Kwa PIN Uliopoteza:**
+• Ingia iTax kwa taarifa zako
+• Nenda kwa "PIN Checker" au chapisha tena
+• Au tembelea ofisi yoyote ya KRA na kitambulisho
+
+Je, unahitaji msaada kwa kutoa kodi au huduma nyingine za KRA?`
+            },
+            sha: {
+                english: `SHA (Social Health Authority) Registration Guide:
+
+**What is SHA?**
+SHA replaces NHIF as Kenya's new health insurance scheme under the Universal Health Coverage (UHC) program.
+
+**Registration Steps:**
+
+**1. Online Registration**
+• Visit sha.go.ke or afyayangu.go.ke
+• Click "Register" or "Enroll"
+
+**2. For Existing NHIF Members:**
+• Your NHIF number is automatically migrated to SHA
+• Login with your ID number to activate
+• Update your information if needed
+
+**3. New Registration Required:**
+• National ID number
+• Phone number (for M-Pesa payments)
+• Email address
+• Employment status
+• Dependents information (spouse, children)
+
+**4. Contribution Rates:**
+• Employed: 2.75% of gross salary (deducted by employer)
+• Self-employed: Minimum KSh 500 per month
+• Informal sector: Flexible payment options
+
+**5. Payment Methods:**
+• M-Pesa Paybill: 8474
+• Bank transfer
+• Employer deduction
+
+**Benefits:**
+• Outpatient and inpatient coverage
+• Maternity services
+• Emergency services
+• Chronic disease management
+
+Need help with a specific SHA issue?`,
+                swahili: `Mwongozo wa Usajili wa SHA (Social Health Authority):
+
+**SHA ni Nini?**
+SHA inachukua nafasi ya NHIF kama mpango mpya wa bima ya afya Kenya chini ya UHC.
+
+**Hatua za Usajili:**
+
+**1. Usajili Mtandaoni**
+• Tembelea sha.go.ke au afyayangu.go.ke
+• Bonyeza "Register" au "Enroll"
+
+**2. Kwa Wanachama wa NHIF:**
+• Namba yako ya NHIF inahamishiwa kiotomati kwa SHA
+• Ingia kwa kutumia namba ya kitambulisho
+• Sasisha maelezo yako ikiwa inahitajika
+
+**3. Usajili Mpya Unahitaji:**
+• Namba ya kitambulisho cha Taifa
+• Namba ya simu (kwa malipo ya M-Pesa)
+• Anwani ya email
+• Hali ya ajira
+• Taarifa za wategemezi (mke/mume, watoto)
+
+**4. Kiwango cha Mchango:**
+• Wafanyakazi: 2.75% ya mshahara
+• Wajiajiri: KSh 500 kila mwezi
+• Wafanyikazi wa sekta isiyo rasmi: Chaguo za malipo rahisi
+
+**5. Njia za Malipo:**
+• M-Pesa Paybill: 8474
+• Uhamisho wa benki
+• Mkato wa mshahara
+
+**Faida:**
+• Matibabu ya nje na ya kulala hospitali
+• Huduma za uzazi
+• Huduma za dharura
+• Usimamizi wa magonjwa sugu
+
+Je, unahitaji msaada kwa suala maalum la SHA?`
+            },
+            helb: {
+                english: `HELB (Higher Education Loans Board) Application:
+
+**For First-Time Applicants (New Students):**
+
+**1. Online Application**
+• Visit helb.co.ke
+• Click "Student Portal" → "First Time Applicant"
+
+**2. Create Account**
+• Use your KCSE index number
+• Valid email address
+• Phone number
+
+**3. Required Documents:**
+• KCSE result slip/certificate
+• Admission letter from university/college
+• National ID card (or waiting card)
+• Parent's/guardian's ID copies
+• Passport-size photo
+• Bank account details (student's account)
+
+**4. Fill Application Form:**
+• Personal details
+• Family income information
+• Institution details
+• Course information
+
+**5. Loan Amounts:**
+• Up to KSh 60,000 per year (tuition)
+• Up to KSh 20,000 per year (upkeep)
+• Government scholarship may apply
+
+**For Continuing Students:**
+• Login to Student Portal
+• Apply for subsequent loan
+• Check disbursement status
+
+**Important Dates:**
+• Applications open: July-August (before academic year)
+• Deadline: Check website for current year dates
+
+**Repayment:**
+• Starts one year after completing studies
+• Minimum monthly payment: KSh 1,000
+• Can check balance via HELB app or portal
+
+Need help with loan repayment or appeals?`,
+                swahili: `Maombi ya Mkopo wa HELB:
+
+**Kwa Waombaji wa Kwanza (Wanafunzi Wapya):**
+
+**1. Maombi Mtandaoni**
+• Tembelea helb.co.ke
+• Bonyeza "Student Portal" → "First Time Applicant"
+
+**2. Fungua Akaunti**
+• Tumia namba yako ya index ya KCSE
+• Email sahihi
+• Namba ya simu
+
+**3. Nyaraka Zinazohitajika:**
+• Cheti cha matokeo ya KCSE
+• Barua ya kukubaliwa na chuo
+• Kitambulisho cha Taifa
+• Nakili za za vitambulisho vya wazazi/mlezi
+• Picha ya passport
+• Maelezo ya akaunti ya benki
+
+**4. Jaza Fomu ya Maombi:**
+• Maelezo binafsi
+• Taarifa za mapato ya familia
+• Maelezo ya chuo
+• Taarifa za kozi
+
+**5. Kiasi cha Mkopo:**
+• Had KSh 60,000 kwa mwaka (karo)
+• Had KSh 20,000 kwa mwaka (matumizi)
+• Mikopo ya serikali inaweza kutolewa
+
+**Kwa Wanafunzi Wanaendelea:**
+• Ingia Student Portal
+• Omba mkopo wa kuendelea
+• Angalia hali ya malipo
+
+**Tarehe Muhimu:**
+• Maombi hufunguliwa: Julai-Agosti
+• Tarehe ya mwisho: Angalia tovuti kwa mwaka huu
+
+**Malipo:**
+• Yanaanza mwaka mmoja baada ya kumaliza masomo
+• Malipo ya kila mwezi: KSh 1,000
+• Unaweza kuangalia salio kupitia HELB app
+
+Je, unahitaji msaada na malipo ya mkopo au rufaa?`
+            },
+            default: {
+                english: `Thank you for your question! I'm here to help you with Kenyan government services including:
+
+• National ID (Huduma Namba)
+• Birth Certificates
+• Passports
+• KRA PIN and tax services
+• SHA/NHIF health insurance
+• HELB student loans
+• NSSF contributions
+• Driving licenses
+• Business registration
+• Police Clearance Certificates
+
+Could you please provide more details about what specific service you need help with? I'm happy to guide you through the process step by step.`,
+                swahili: `Asante kwa swali lako! Nipo hapa kukusaidia na huduma za serikali za Kenya kama vile:
+
+• Kitambulisho cha Taifa (Huduma Namba)
+• Vyeti vya Kuzaliwa
+• Pasi
+• PIN ya KRA na huduma za kodi
+• Bima ya afya SHA/NHIF
+• Mikopo ya HELB
+• Michango ya NSSF
+• Leseni za udereva
+• Usajili wa biashara
+• Cheti cha Usafi wa Rekodi za Polisi
+
+Tafadhali toa maelezo zaidi kuhusu huduma gani unayohitaji msaada? Ninafurahi kukuongoza hatua kwa hatua.`
+            }
+        };
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const chatContainer = document.getElementById('chatContainer');
+        const messagesContainer = document.getElementById('messages');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const quickChips = document.querySelectorAll('.quick-chip');
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
+        // Get current timestamp
+        function getTimestamp() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { 
+                hour: 'numeric', 
+                minute: '2-digit',
+                hour12: true 
+            });
+        }
+
+        // Detect language from text
+        function detectLanguage(text) {
+            const swahiliWords = ['je', 'jinsi', 'namna', 'nipatie', 'tafadhali', 'nataka', 'naomba', 'habari', 'karibu', 'kwa', 'ya', 'wa', 'za', 'nchi', 'serikali', 'mimi', 'msaada', 'sijui', 'unaweza'];
+            const lowerText = text.toLowerCase();
+            const hasSwahili = swahiliWords.some(word => lowerText.includes(word));
+            return hasSwahili ? 'swahili' : 'english';
+        }
+
+        // Match query to service
+        function matchService(query) {
+            const lowerQuery = query.toLowerCase();
+            
+            const patterns = {
+                birth_certificate: ['birth certificate', 'certificates of birth', 'cheti cha kuzaliwa', 'kuzaliwa', 'birth cert'],
+                passport: ['passport', 'pasi', 'travel document'],
+                kra_pin: ['kra', 'pin', 'tax', 'kodi', 'itax', 'kra pin'],
+                sha: ['sha', 'nhif', 'health insurance', 'bima ya afya', 'social health', 'afya yangu'],
+                helb: ['helb', 'loan', 'mkopo', 'higher education', 'student loan', 'chuo', 'university']
+            };
+
+            for (const [service, keywords] of Object.entries(patterns)) {
+                if (keywords.some(keyword => lowerQuery.includes(keyword))) {
+                    return service;
+                }
+            }
+            return 'default';
+        }
+
+        // Format message with markdown-like styling
+        function formatMessage(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+        }
+
+        // ============================================
+        // MESSAGE FUNCTIONS
+        // ============================================
+
+        // Create message element
+        function createMessageElement(text, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const avatar = isUser ? 'You' : 'AI';
+            const timestamp = getTimestamp();
+            
+            const aiBadge = !isUser ? `
+                <span class="ai-label">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Verified
+                </span>
+            ` : '';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar" aria-hidden="true">${avatar}</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <p>${formatMessage(text)}</p>
+                    </div>
+                    <div class="message-meta">
+                        ${aiBadge}
+                        <span>${timestamp}</span>
+                    </div>
+                </div>
+            `;
+            
+            return messageDiv;
+        }
+
+        // Add message to chat
+        function addMessage(text, isUser = false) {
+            const message = createMessageElement(text, isUser);
+            messagesContainer.appendChild(message);
+            scrollToBottom();
+        }
+
+        // Show typing indicator
+        function showTyping() {
+            typingIndicator.classList.remove('hidden');
+            scrollToBottom();
+        }
+
+        // Hide typing indicator
+        function hideTyping() {
+            typingIndicator.classList.add('hidden');
+        }
+
+        // Scroll to bottom
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 50);
+        }
+
+        // Call the real RAG backend
+        async function sendToHudumaAI(userMessage) {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userMessage })
+            });
+            if (!response.ok) {
+                throw new Error('Server error');
+            }
+            const data = await response.json();
+            return data.reply;
+        }
+
+        // Handle sending message
+        async function sendMessage(text) {
+            if (!text.trim()) return;
+
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            addMessage(text, true);
+
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            showTyping();
+
+            try {
+                const reply = await sendToHudumaAI(text);
+                hideTyping();
+                addMessage(reply, false);
+            } catch (error) {
+                hideTyping();
+                addMessage("Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi.", false);
+            }
+
+            messageInput.disabled = false;
+            messageInput.focus();
+            updateSendButton();
+        }
+
+        // Update send button state
+        function updateSendButton() {
+            const hasText = messageInput.value.trim().length > 0;
+            sendButton.disabled = !hasText;
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+
+        // Send button click
+        sendButton.addEventListener('click', () => {
+            sendMessage(messageInput.value);
+        });
+
+        // Enter key to send
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage(messageInput.value);
+            }
+        });
+
+        // Input change
+        messageInput.addEventListener('input', () => {
+            updateSendButton();
+            // Auto-resize textarea
+            messageInput.style.height = 'auto';
+            messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
+        });
+
+        // Quick chip clicks
+        quickChips.forEach(chip => {
+            chip.addEventListener('click', () => {
+                const query = chip.getAttribute('data-query');
+                sendMessage(query);
+            });
+            
+            chip.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    const query = chip.getAttribute('data-query');
+                    sendMessage(query);
+                }
+            });
+        });
+
+        // Initialize with welcome message after short delay
+        setTimeout(() => {
+            addMessage(`Jambo! Welcome to Huduma AI. I'm here to help you access verified information about Kenyan government services.
+
+Feel free to ask me about:
+• National ID • SHA • KRA PIN • Passport • NSSF
+• Birth Certificate • Driving Licence • Business Registration
+• HELB • Police Clearance
+
+How can I assist you today?`, false);
+        }, 1000);
+
+        // Focus input on load
+        window.addEventListener('load', () => {
+            messageInput.focus();
+        });
+
+        // Handle visibility change (pause/resume animations)
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                document.body.classList.add('paused');
+            } else {
+                document.body.classList.remove('paused');
+            }
+        });
+    </script>
+</body>
+</html>

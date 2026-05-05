@@ -1,0 +1,42 @@
+[
+  {
+    "file": "Service-01-National -ID.md",
+    "keywords": ["national id", "id card", "maisha card", "id application", "lost id", "new id"]
+  },
+  {
+    "file": "Service-02-SHA.md",
+    "keywords": ["sha", "social health authority", "nhif", "health insurance", "shif", "afya yangu"]
+  },
+  {
+    "file": "Service-03-KRA Pin.md",
+    "keywords": ["kra", "kra pin", "pin", "tax pin", "itax", "pwo"]
+  },
+  {
+    "file": "Service-04-Passport.md",
+    "keywords": ["passport", "e-passport", "travel document", "immigration", "nyayo house"]
+  },
+  {
+    "file": "Service-05-NSSF.md",
+    "keywords": ["nssf", "social security", "pension", "retirement", "haba haba"]
+  },
+  {
+    "file": "Service-06-Birth Certificate.md",
+    "keywords": ["birth certificate", "birth registration", "late registration", "birth cert"]
+  },
+  {
+    "file": "Service-07-DrivingLicense.md",
+    "keywords": ["driving licence", "driving license", "smart dl", "ntsa", "pdl", "driving test"]
+  },
+  {
+    "file": "Service-08-Business Registration.md",
+    "keywords": ["business", "company", "registration", "brs", "e-citizen", "incorporation"]
+  },
+  {
+    "file": "Service -09-HELB.md",
+    "keywords": ["helb", "higher education loans", "student loan", "tvet loan", "jielimishe"]
+  },
+  {
+    "file": "Service-Good Conduct.md",
+    "keywords": ["police clearance", "good conduct", "dci", "fingerprinting", "pcc"]
+  }
+]

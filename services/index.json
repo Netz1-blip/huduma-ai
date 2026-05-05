@@ -1,62 +1,42 @@
 [
   {
-    "file": "national-id.md",
-    "keywords": [
-      "national id", "national id card", "id card", "kitambulisho", "kitambulisho cha taifa", "national identity", "identity card", "national identification", "maisha card", "new id", "id application", "replace lost id", "lost id", "damaged id", "first id", "id renewal", "id fees", "kid", "id card fees", "national id requirements", "national id documents", "national id age", "national id for minors"
-    ]
+    "file": "Service-01-National -ID.md",
+    "keywords": ["national id", "kitambulisho", "id card", "national identification", "maisha card", "new id", "lost id", "id application", "replace lost id"]
   },
   {
-    "file": "sha.md",
-    "keywords": [
-      "sha", "social health authority", "social health insurance", "new health insurance", "afya", "bima ya afya", "health fund", "sha benefits", "sha registration", "sha contributions", "sha card", "sha cover", "nhif replacement", "what is sha", "how to register for sha", "sha rates", "sha dependants", "sha payment", "sha portal"
-    ]
+    "file": "Service-02-SHA.md",
+    "keywords": ["sha", "social health authority", "health insurance", "afya", "bima ya afya", "nhif replacement", "register for sha", "sha registration", "sha benefits"]
   },
   {
-    "file": "kra-pin.md",
-    "keywords": [
-      "kra pin", "kra", "pin certificate", "tax pin", "kra registration", "income tax pin", "vat pin", "kra pin application", "get kra pin", "kra pin for job", "kra pin for business", "kra pin for helb", "kra pin fees", "kra pin documents", "how to get kra pin", "kra itax", "kra pin replacement", "lost kra pin", "kra pin email", "kra pin for minors"
-    ]
+    "file": "Service-03-KRA Pin.md",
+    "keywords": ["kra pin", "kra", "tax pin", "pin certificate", "kra registration", "itax", "how to get kra pin", "kra pin fees"]
   },
   {
-    "file": "passport.md",
-    "keywords": [
-      "passport", "east african passport", "kenyan passport", "ordinary passport", "diplomatic passport", "service passport", "passport application", "passport renewal", "lost passport", "passport fees", "passport requirements", "passport processing time", "e-passport", "passport tracking", "passport status", "kid passport", "minor passport", "passport for child", "how to apply for passport", "passport appointment", "nyayo house passport", "immigration passport"
-    ]
+    "file": "Service-04-Passport.md",
+    "keywords": ["passport", "east african passport", "passport application", "passport renewal", "lost passport", "passport fees", "passport requirements"]
   },
   {
-    "file": "nssf.md",
-    "keywords": [
-      "nssf", "national social security fund", "social security", "pension", "nssf contributions", "nssf registration", "nssf benefits", "nssf statement", "nssf rates", "nssf tier 1", "nssf tier 2", "nssf online", "nssf portal", "nssf card", "nssf claim", "how to register nssf", "nssf penalties", "nssf for employers", "nssf for self employed", "nssf lump sum", "nssf withdrawal"
-    ]
+    "file": "Service-05-NSSF.md",
+    "keywords": ["nssf", "social security", "pension", "nssf contributions", "nssf registration", "nssf benefits", "nssf statement"]
   },
   {
-    "file": "birth-certificate.md",
-    "keywords": [
-      "birth certificate", "cheti cha kuzaliwa", "birth registration", "birth notification", "newborn registration", "late birth registration", "birth certificate fees", "birth certificate requirements", "how to get birth certificate", "lost birth certificate", "replacement birth certificate", "copy of birth certificate", "birth certificate for passport", "birth certificate for id", "birth certificate for school", "birth certificate age", "amended birth certificate", "adoption birth certificate"
-    ]
+    "file": "Service-06-Birth Certificate.md",
+    "keywords": ["birth certificate", "cheti cha kuzaliwa", "birth registration", "newborn registration", "lost birth certificate", "birth certificate fees", "birth certificate requirements"]
   },
   {
-    "file": "driving-licence.md",
-    "keywords": [
-      "driving licence", "driver license", "leseni ya kuendesha", "dl", "driving permit", "learners licence", "provisional licence", "driving test", "driving licence application", "driving licence renewal", "lost driving licence", "replacement driving licence", "driving licence fees", "driving licence classes", "driving licence requirements", "ntsa driving licence", "driving school", "endorsement", "international driving permit", "dl portal"
-    ]
+    "file": "Service-07-DrivingLicense.md",
+    "keywords": ["driving licence", "driver license", "leseni ya kuendesha", "dl", "learners licence", "driving test", "driving licence renewal", "lost driving licence"]
   },
   {
-    "file": "business-registration.md",
-    "keywords": [
-      "business registration", "company registration", "register a business", "e-citizen business", "business name registration", "limited company", "ltd registration", "partnership registration", "sole proprietorship", "business permit", "certificate of incorporation", "cac business registration", "how to register a business in kenya", "business registration fees", "business registration documents", "online business registration", "biz registration", "start a company", "business renewal", "business search"
-    ]
+    "file": "Service-08-Business Registration.md",
+    "keywords": ["business registration", "company registration", "register a business", "e-citizen business", "certificate of incorporation", "business name registration", "limited company"]
   },
   {
-    "file": "helb.md",
-    "keywords": [
-      "helb", "higher education loans board", "helb loan", "helb application", "helb portal", "helb login", "helb first time", "helb continuing students", "helb funding", "helb repayment", "helb statement", "helb clearance", "helb deferment", "helb loan balance", "how to apply for helb", "helb requirements", "helb forms", "helb contacts", "helb beneficiary", "helb status", "helb allocation", "helb appeal"
-    ]
+    "file": "Service -09-HELB.md",
+    "keywords": ["helb", "helb loan", "helb application", "higher education", "helb portal", "helb repayment", "helb status", "helb clearance", "helb funding"]
   },
   {
-    "file": "police-clearance.md",
-    "keywords": [
-      "police clearance", "certificate of good conduct", "good conduct", "police certificate", "dci clearance", "criminal record check", "background check", "police clearance fees", "police clearance application", "how to get police clearance", "good conduct online", "e citizen police clearance", "dci good conduct", "police clearance for job", "police clearance for travel", "police clearance for visa", "police clearance for adoption", "police clearance processing time", "police clearance tracking", "good conduct validity", "police clearance for foreigners"
-    ]
+    "file": "Service-Good Conduct.md",
+    "keywords": ["police clearance", "certificate of good conduct", "good conduct", "dci clearance", "criminal record check", "police certificate", "police clearance fees", "how to get police clearance"]
   }
 ]

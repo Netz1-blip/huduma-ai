@@ -215,15 +215,34 @@ module.exports = async function handler(req, res) {
     }
 
     if (!reply) {
-      return res.status(503).json({
-        error: 'All models are currently rate limited or unavailable. Try again later.',
-        details: lastError
-      });
+      console.error('All Groq models failed:', lastError);
+      // Fallback to a simple response when API fails
+      const fallbackResponses = {
+        'hi': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
+        'hello': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
+        'habari': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
+        'default': "Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi. I'm here to help with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance."
+      };
+      
+      const lowerMessage = message.toLowerCase().trim();
+      let fallbackReply = fallbackResponses.default;
+      
+      for (const key in fallbackResponses) {
+        if (key !== 'default' && lowerMessage.includes(key)) {
+          fallbackReply = fallbackResponses[key];
+          break;
+        }
+      }
+      
+      return res.status(200).json({ reply: fallbackReply });
     }
 
     return res.status(200).json({ reply });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal server error', details: error.message });
+    console.error('API error:', error);
+    // Return a friendly error message instead of technical details
+    return res.status(200).json({
+      reply: "Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi. I'm here to help with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance."
+    });
   }
 };

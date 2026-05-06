@@ -2,100 +2,117 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#004d40">
-    <title>Huduma AI - Government Services Assistant</title>
+    <title>Huduma AI - Next-Gen Government Services Assistant</title>
+    <link rel="manifest" href="data:application/json,{%22name%22:%22Huduma%20AI%22,%22short_name%22:%22Huduma%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23004d40%22}">
     <style>
         /* ============================================
-           CLEAN CSS VARIABLES
+           ENHANCED CSS VARIABLES & RESET
            ============================================ */
         :root {
+            /* Original Colors */
             --primary-green: #004d40;
             --primary-dark: #00352c;
+            --kenya-black: #000000;
             --kenya-red: #BB1E10;
             --kenya-green: #006600;
-            --kenya-black: #000000;
+            --kenya-white: #ffffff;
             --bg-white: #ffffff;
             --bg-grey: #f9fafb;
+            --chat-bot: #f3f4f6;
+            --chat-user: #dff6ec;
             --text-primary: #111827;
             --text-secondary: #6b7280;
             --border-light: #e5e7eb;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --glow-green: 0 0 20px rgba(0, 77, 64, 0.15);
             
-            /* Spacing */
+            /* Dark Theme Variables */
+            --dark-bg: #1a1a1a;
+            --dark-surface: #2d2d2d;
+            --dark-text: #ffffff;
+            --dark-text-secondary: #a0a0a0;
+            --dark-border: #404040;
+            
+            /* Enhanced Spacing */
             --space-xs: 0.25rem;
             --space-sm: 0.5rem;
             --space-md: 1rem;
             --space-lg: 1.5rem;
             --space-xl: 2rem;
+            --space-2xl: 3rem;
             
-            /* Typography */
-            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            /* Enhanced Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             --text-xs: 0.75rem;
             --text-sm: 0.875rem;
             --text-base: 1rem;
             --text-lg: 1.125rem;
             --text-xl: 1.25rem;
+            --text-2xl: 1.5rem;
+            --text-3xl: 2rem;
             
-            /* Layout */
-            --header-height: 80px;
-            --max-width: 800px;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-full: 9999px;
+            /* Enhanced Transitions */
+            --transition-fast: 150ms ease;
+            --transition-base: 250ms ease;
+            --transition-slow: 350ms ease;
+            --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            
+            /* Animation Variables */
+            --rotate-loading: 2s linear infinite;
+            --pulse-glow: 2s ease-in-out infinite;
+            --slide-up: 0.3s ease-out;
+            --fade-in: 0.5s ease-in;
         }
 
-        /* ============================================
-           RESET & BASE STYLES
-           ============================================ */
-        *, *::before, *::after {
-            box-sizing: border-box;
+        /* Dark Theme */
+        [data-theme="dark"] {
+            --bg-white: var(--dark-bg);
+            --bg-grey: var(--dark-surface);
+            --chat-bot: var(--dark-surface);
+            --chat-user: #2d4a3d;
+            --text-primary: var(--dark-text);
+            --text-secondary: var(--dark-text-secondary);
+            --border-light: var(--dark-border);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* High Contrast Theme */
+        [data-theme="high-contrast"] {
+            --bg-white: #000000;
+            --bg-grey: #1a1a1a;
+            --chat-bot: #1a1a1a;
+            --chat-user: #333333;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-light: #ffffff;
+            --primary-green: #00ff00;
+            --kenya-red: #ff0000;
+            --kenya-green: #00ff00;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            -webkit-text-size-adjust: 100%;
+            box-sizing: border-box;
         }
 
         body {
             font-family: var(--font-sans);
-            font-size: var(--text-base);
-            line-height: 1.6;
+            background: var(--bg-white);
             color: var(--text-primary);
-            background: var(--bg-grey);
-            min-height: 100vh;
+            line-height: 1.6;
+            transition: background-color var(--transition-base), color var(--transition-base);
             overflow-x: hidden;
         }
 
         /* ============================================
-           APP CONTAINER
-           ============================================ */
-        .app {
-            max-width: var(--max-width);
-            margin: 0 auto;
-            background: var(--bg-white);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-lg);
-        }
-
-        @media (min-width: 801px) {
-            .app {
-                min-height: calc(100vh - 2rem);
-                margin: 1rem auto;
-                border-radius: var(--radius-lg);
-                overflow: hidden;
-            }
-        }
-
-        /* ============================================
-           HEADER
+           ENHANCED HEADER WITH CONTROLS
            ============================================ */
         .header {
             position: sticky;
@@ -103,78 +120,108 @@
             z-index: 100;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-light);
             box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        [data-theme="dark"] .header {
+            background: rgba(45, 45, 45, 0.95);
         }
 
         .kenya-flag-accent {
             display: flex;
             height: 4px;
             width: 100%;
+            background: linear-gradient(90deg, var(--kenya-black) 33.33%, var(--kenya-red) 33.33%, var(--kenya-red) 66.66%, var(--kenya-green) 66.66%);
+            animation: flagWave 3s ease-in-out infinite;
         }
 
-        .kenya-flag-accent .black,
-        .kenya-flag-accent .red,
-        .kenya-flag-accent .green {
-            flex: 1;
+        @keyframes flagWave {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.02); }
         }
-
-        .kenya-flag-accent .black { background: var(--kenya-black); }
-        .kenya-flag-accent .red { background: var(--kenya-red); }
-        .kenya-flag-accent .green { background: var(--kenya-green); }
 
         .header-content {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            justify-content: space-between;
             padding: var(--space-md) var(--space-lg);
-            height: calc(var(--header-height) - 4px);
+            position: relative;
         }
 
         .header-left {
             display: flex;
             align-items: center;
             gap: var(--space-md);
-            flex: 1;
         }
 
         .ai-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: var(--radius-full);
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-green), var(--kenya-green));
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            box-shadow: var(--shadow-md);
-            font-size: 24px;
+            color: white;
+            font-weight: bold;
+            font-size: var(--text-lg);
+            position: relative;
+            overflow: hidden;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform var(--transition-base);
         }
 
         .ai-avatar:hover {
             transform: scale(1.1);
         }
 
+        .ai-avatar::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
         .header-title {
-            font-size: var(--text-lg);
-            font-weight: 700;
+            font-size: var(--text-xl);
+            font-weight: 600;
             color: var(--text-primary);
         }
 
         .header-controls {
             display: flex;
             align-items: center;
-            gap: var(--space-md);
+            gap: var(--space-sm);
         }
 
         .theme-toggle {
-            display: flex;
-            gap: var(--space-xs);
             background: var(--bg-grey);
+            border: 1px solid var(--border-light);
+            border-radius: 50px;
             padding: var(--space-xs);
-            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
 
         .theme-option {
@@ -184,62 +231,78 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
+            font-size: var(--text-sm);
+            transition: all var(--transition-base);
         }
 
         .theme-option.active {
             background: var(--primary-green);
             color: white;
+            transform: scale(1.2);
         }
 
         .voice-btn {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--bg-grey);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             border: none;
+            color: white;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.4);
         }
 
         .voice-btn.recording {
-            background: var(--kenya-red);
-            animation: pulse 2s infinite;
+            animation: pulseRecording 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* ============================================
-           CHAT CONTAINER
-           ============================================ */
-        .chat-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: var(--space-md);
-            scroll-behavior: smooth;
+        @keyframes pulseRecording {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
         }
 
         /* ============================================
-           WELCOME SECTION
+           ENHANCED WELCOME SECTION
            ============================================ */
         .welcome-section {
-            margin-bottom: var(--space-lg);
-            animation: slideInUp 0.5s ease;
+            padding: var(--space-xl) var(--space-lg);
+            background: linear-gradient(135deg, var(--bg-grey), var(--bg-white));
+            border-bottom: 1px solid var(--border-light);
+            position: relative;
+            overflow: hidden;
         }
 
-        @keyframes slideInUp {
+        .welcome-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-title {
+            font-size: var(--text-3xl);
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: var(--space-md);
+            animation: slideInDown var(--transition-slow);
+        }
+
+        @keyframes slideInDown {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(-30px);
             }
             to {
                 opacity: 1;
@@ -247,85 +310,123 @@
             }
         }
 
-        .welcome-content {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: var(--space-lg);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            text-align: center;
-        }
-
-        .welcome-title {
-            font-size: var(--text-xl);
-            font-weight: 700;
-            margin-bottom: var(--space-sm);
-        }
-
         .welcome-subtitle {
-            font-size: var(--text-base);
-            opacity: 0.95;
-            line-height: 1.5;
-            margin-bottom: var(--space-lg);
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+            animation: slideInUp var(--transition-slow);
         }
 
-        .quick-actions {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: var(--space-sm);
-        }
-
-        .quick-action {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            padding: var(--space-md);
-            border-radius: var(--radius-md);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: var(--space-xs);
-            min-height: 80px;
-            justify-content: center;
-        }
-
-        .quick-action:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .quick-action-icon {
-            font-size: 24px;
-        }
-
-        .quick-action-label {
-            font-size: var(--text-xs);
-            font-weight: 500;
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* ============================================
-           SMART SUGGESTIONS
+           ENHANCED QUICK ACTIONS
+           ============================================ */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .quick-action {
+            background: var(--bg-white);
+            border: 2px solid var(--border-light);
+            border-radius: 16px;
+            padding: var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-action::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 77, 64, 0.1), transparent);
+            transition: left var(--transition-slow);
+        }
+
+        .quick-action:hover::before {
+            left: 100%;
+        }
+
+        .quick-action:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-green);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: var(--space-sm);
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        .quick-action:nth-child(2n) .quick-action-icon {
+            animation-delay: 0.2s;
+        }
+
+        .quick-action:nth-child(3n) .quick-action-icon {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        .quick-action-label {
+            font-size: var(--text-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* ============================================
+           SMART SUGGESTIONS BAR
            ============================================ */
         .smart-suggestions {
             background: var(--bg-grey);
-            border-radius: var(--radius-lg);
-            padding: var(--space-md);
-            margin-bottom: var(--space-md);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
+            border-top: 1px solid var(--border-light);
+            padding: var(--space-md) var(--space-lg);
+            display: none;
+            animation: slideDown var(--transition-base);
         }
 
         .smart-suggestions.active {
-            opacity: 1;
-            transform: translateY(0);
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .suggestions-container {
-            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .suggestions-title {
@@ -339,125 +440,134 @@
             display: flex;
             flex-wrap: wrap;
             gap: var(--space-sm);
-            justify-content: center;
         }
 
         .suggestion-chip {
             background: var(--bg-white);
             border: 1px solid var(--border-light);
-            color: var(--text-primary);
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-full);
+            border-radius: 20px;
+            padding: var(--space-xs) var(--space-md);
             font-size: var(--text-sm);
+            color: var(--text-primary);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all var(--transition-base);
+            position: relative;
         }
 
         .suggestion-chip:hover {
             background: var(--primary-green);
             color: white;
-            border-color: var(--primary-green);
+            transform: scale(1.05);
+        }
+
+        .suggestion-chip .shortcut {
+            font-size: var(--text-xs);
+            opacity: 0.7;
+            margin-left: var(--space-xs);
         }
 
         /* ============================================
-           CHAT MESSAGES
+           ENHANCED CHAT CONTAINER
            ============================================ */
-        .chat-messages {
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+            min-height: 400px;
             display: flex;
             flex-direction: column;
-            gap: var(--space-md);
-            padding-bottom: var(--space-md);
+            position: relative;
         }
 
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md) 0;
+            scroll-behavior: smooth;
+        }
+
+        /* Enhanced Message Bubbles */
         .message {
-            display: flex;
-            gap: var(--space-sm);
-            animation: messageEnter 0.3s ease;
+            margin-bottom: var(--space-lg);
+            animation: messageSlide var(--transition-base);
         }
 
-        @keyframes messageEnter {
+        @keyframes messageSlide {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateX(-20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
         }
 
         .message.user {
+            display: flex;
             justify-content: flex-end;
         }
 
-        .message.bot {
-            justify-content: flex-start;
-        }
-
-        .message-content {
-            max-width: 70%;
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-lg);
-            word-wrap: break-word;
-        }
-
         .message.user .message-content {
-            background: var(--primary-green);
-            color: white;
+            background: linear-gradient(135deg, var(--chat-user), #c8e6c9);
+            margin-left: auto;
         }
 
         .message.bot .message-content {
-            background: var(--bg-white);
-            color: var(--text-primary);
-            border: 1px solid var(--border-light);
+            background: var(--chat-bot);
+            margin-right: auto;
+        }
+
+        .message-content {
+            max-width: 80%;
+            padding: var(--space-md);
+            border-radius: 18px;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .message-content:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
         }
 
         .message-text {
-            margin: 0;
-            line-height: 1.4;
+            font-size: var(--text-base);
+            line-height: 1.5;
+            margin-bottom: var(--space-xs);
         }
 
         .message-time {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: var(--space-xs);
-            display: block;
-        }
-
-        .message.user .message-time {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .message.bot .message-time {
+            font-size: var(--text-xs);
             color: var(--text-secondary);
+            text-align: right;
         }
 
-        /* ============================================
-           TYPING INDICATOR
-           ============================================ */
+        /* Enhanced Typing Indicator */
         .typing-indicator {
             display: flex;
-            gap: 4px;
-            padding: 12px 16px;
-            background: var(--bg-white);
-            border-radius: 16px;
-            margin-bottom: 12px;
-            max-width: 70%;
-            border: 1px solid var(--border-light);
+            align-items: center;
+            gap: var(--space-xs);
+            padding: var(--space-md);
+            background: var(--chat-bot);
+            border-radius: 18px;
+            width: fit-content;
+            margin-bottom: var(--space-lg);
         }
 
         .typing-dot {
             width: 8px;
             height: 8px;
-            border-radius: 50%;
             background: var(--text-secondary);
-            animation: typingDot 1.4s infinite ease-in-out;
+            border-radius: 50%;
+            animation: typingPulse 1.4s infinite ease-in-out;
         }
 
         .typing-dot:nth-child(1) { animation-delay: -0.32s; }
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
 
-        @keyframes typingDot {
+        @keyframes typingPulse {
             0%, 80%, 100% {
                 transform: scale(0.8);
                 opacity: 0.5;
@@ -469,110 +579,683 @@
         }
 
         /* ============================================
-           INPUT AREA
+           ENHANCED INPUT AREA
            ============================================ */
         .input-area {
             background: var(--bg-white);
             border-top: 1px solid var(--border-light);
-            padding: var(--space-md);
+            padding: var(--space-lg);
             position: sticky;
             bottom: 0;
-            z-index: 50;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
 
         .input-container {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
-            gap: var(--space-sm);
+            gap: var(--space-md);
             align-items: flex-end;
         }
 
         .input-wrapper {
             flex: 1;
-            display: flex;
-            align-items: flex-end;
-            background: var(--bg-grey);
-            border-radius: var(--radius-lg);
-            border: 1px solid var(--border-light);
-            transition: all 0.3s ease;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 2px rgba(0, 77, 64, 0.1);
+            position: relative;
         }
 
         .chat-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: var(--space-md);
-            font-size: var(--text-base);
-            color: var(--text-primary);
-            resize: none;
-            min-height: 48px;
+            width: 100%;
+            min-height: 50px;
             max-height: 120px;
-            line-height: 1.4;
-            font-family: inherit;
+            padding: var(--space-md) var(--space-lg);
+            padding-right: 50px;
+            border: 2px solid var(--border-light);
+            border-radius: 25px;
+            font-size: var(--text-base);
+            font-family: var(--font-sans);
+            resize: none;
+            outline: none;
+            transition: all var(--transition-base);
+            background: var(--bg-white);
+            color: var(--text-primary);
         }
 
         .chat-input:focus {
-            outline: none;
-        }
-
-        .chat-input::placeholder {
-            color: var(--text-secondary);
+            border-color: var(--primary-green);
+            box-shadow: var(--glow-green);
         }
 
         .input-actions {
             display: flex;
-            gap: var(--space-xs);
-            padding: var(--space-xs) var(--space-sm);
+            gap: var(--space-sm);
+            position: absolute;
+            right: var(--space-xs);
+            bottom: var(--space-xs);
         }
 
         .input-action-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: transparent;
             border: none;
+            background: var(--bg-grey);
+            color: var(--text-secondary);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            color: var(--text-secondary);
+            transition: all var(--transition-base);
+            font-size: var(--text-lg);
         }
 
         .input-action-btn:hover {
             background: var(--primary-green);
             color: white;
+            transform: scale(1.1);
         }
 
         .send-btn {
-            width: 48px;
-            height: 48px;
+            min-width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: var(--primary-green);
             border: none;
+            background: linear-gradient(135deg, var(--primary-green), var(--kenya-green));
             color: white;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 18px;
-            flex-shrink: 0;
+            font-size: var(--text-lg);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
         }
 
         .send-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .send-btn.sending {
+            animation: sendPulse 1s infinite;
+        }
+
+        @keyframes sendPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+
+        /* ============================================
+           DOCUMENT UPLOAD AREA
+           ============================================ */
+        .document-upload {
+            background: var(--bg-grey);
+            border: 2px dashed var(--border-light);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            text-align: center;
+            margin-bottom: var(--space-md);
+            display: none;
+            transition: all var(--transition-base);
+        }
+
+        .document-upload.active {
+            display: block;
+            animation: slideDown var(--transition-base);
+        }
+
+        .document-upload.dragover {
+            border-color: var(--primary-green);
+            background: rgba(0, 77, 64, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .upload-text {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-md);
+        }
+
+        .upload-btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .upload-btn:hover {
             background: var(--primary-dark);
             transform: scale(1.05);
         }
 
-        .send-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
+        .document-preview {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-top: var(--space-md);
+        }
+
+        .document-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: var(--space-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            position: relative;
+            animation: slideUp var(--transition-base);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .document-item-icon {
+            font-size: var(--text-lg);
+            color: var(--primary-green);
+        }
+
+        .document-item-name {
+            font-size: var(--text-sm);
+            color: var(--text-primary);
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .document-item-remove {
+            background: var(--kenya-red);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+            transition: all var(--transition-base);
+        }
+
+        .document-item-remove:hover {
+            transform: scale(1.2);
+        }
+
+        /* ============================================
+           PROGRESS TRACKING
+           ============================================ */
+        .progress-tracker {
+            background: var(--bg-grey);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            display: none;
+        }
+
+        .progress-tracker.active {
+            display: block;
+            animation: slideDown var(--transition-base);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-percentage {
+            font-size: var(--text-sm);
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: var(--border-light);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: var(--space-md);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-green), var(--kenya-green));
+            border-radius: 4px;
+            transition: width var(--transition-slow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progressShimmer 2s infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-xs);
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--text-xs);
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: all var(--transition-base);
+        }
+
+        .step-icon.completed {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .step-icon.active {
+            background: var(--kenya-green);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 102, 0, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 102, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 102, 0, 0); }
+        }
+
+        .step-label {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 80px;
+        }
+
+        /* ============================================
+           LOCATION FINDER
+           ============================================ */
+        .location-finder {
+            background: var(--bg-grey);
+            border-radius: 12px;
+            padding: var(--space-lg);
+            margin-bottom: var(--space-md);
+            display: none;
+        }
+
+        .location-finder.active {
+            display: block;
+            animation: slideDown var(--transition-base);
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+
+        .location-icon {
+            font-size: var(--text-xl);
+            color: var(--primary-green);
+        }
+
+        .location-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .location-search {
+            display: flex;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-md);
+        }
+
+        .location-input {
+            flex: 1;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: var(--text-base);
+            background: var(--bg-white);
+            color: var(--text-primary);
+        }
+
+        .location-btn {
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .location-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .location-results {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .location-item {
+            background: var(--bg-white);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .location-item:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .location-name {
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .location-address {
+            font-size: var(--text-sm);
+            opacity: 0.8;
+        }
+
+        .location-distance {
+            font-size: var(--text-xs);
+            opacity: 0.7;
+            margin-top: var(--space-xs);
+        }
+
+        /* ============================================
+           CHAT HISTORY
+           ============================================ */
+        .chat-history {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: var(--bg-white);
+            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: right var(--transition-base);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-history.active {
+            right: 0;
+        }
+
+        .history-header {
+            background: var(--primary-green);
+            color: white;
+            padding: var(--space-lg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-title {
+            font-weight: 600;
+            font-size: var(--text-lg);
+        }
+
+        .history-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            transition: transform var(--transition-base);
+        }
+
+        .history-close:hover {
+            transform: scale(1.2);
+        }
+
+        .history-search {
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .history-input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-md);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            font-size: var(--text-base);
+            background: var(--bg-white);
+            color: var(--text-primary);
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: var(--space-md);
+        }
+
+        .history-item {
+            background: var(--bg-grey);
+            border-radius: 8px;
+            padding: var(--space-md);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .history-item:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .history-date {
+            font-size: var(--text-xs);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .history-preview {
+            font-size: var(--text-sm);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* ============================================
+           FLOATING ACTION BUTTONS
+           ============================================ */
+        .fab-container {
+            position: fixed;
+            bottom: var(--space-xl);
+            right: var(--space-xl);
+            z-index: 99;
+        }
+
+        .fab-main {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-green), var(--kenya-green));
+            border: none;
+            color: white;
+            font-size: var(--text-xl);
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-base);
+            position: relative;
+            z-index: 2;
+        }
+
+        .fab-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 77, 64, 0.4);
+        }
+
+        .fab-main.active {
+            transform: rotate(45deg);
+        }
+
+        .fab-options {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .fab-options.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .fab-option {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 2px solid var(--primary-green);
+            color: var(--primary-green);
+            font-size: var(--text-lg);
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .fab-option:hover {
+            background: var(--primary-green);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .fab-tooltip {
+            position: absolute;
+            right: 60px;
+            background: var(--text-primary);
+            color: var(--bg-white);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: 4px;
+            font-size: var(--text-xs);
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .fab-option:hover .fab-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ============================================
+           ACCESSIBILITY FEATURES
+           ============================================ */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: var(--primary-green);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        .skip-link:focus {
+            top: 6px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles */
+        *:focus {
+            outline: 2px solid var(--primary-green);
+            outline-offset: 2px;
+        }
+
+        /* High contrast focus */
+        [data-theme="high-contrast"] *:focus {
+            outline: 3px solid var(--primary-green);
+            outline-offset: 3px;
         }
 
         /* ============================================
@@ -583,56 +1266,53 @@
                 padding: var(--space-sm) var(--space-md);
             }
 
-            .ai-avatar {
-                width: 40px;
-                height: 40px;
-                font-size: 20px;
-            }
-
             .header-title {
-                font-size: var(--text-base);
-            }
-
-            .theme-option {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
-            }
-
-            .voice-btn {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
-            }
-
-            .welcome-content {
-                padding: var(--space-md);
-            }
-
-            .welcome-title {
                 font-size: var(--text-lg);
             }
 
-            .welcome-subtitle {
-                font-size: var(--text-sm);
+            .welcome-section {
+                padding: var(--space-lg) var(--space-md);
+            }
+
+            .welcome-title {
+                font-size: var(--text-2xl);
             }
 
             .quick-actions {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: var(--space-xs);
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                gap: var(--space-sm);
             }
 
             .quick-action {
-                padding: var(--space-sm);
-                min-height: 70px;
+                padding: var(--space-md);
             }
 
-            .quick-action-icon {
-                font-size: 20px;
+            .chat-container {
+                padding: var(--space-md);
             }
 
-            .quick-action-label {
-                font-size: 10px;
+            .message-content {
+                max-width: 90%;
+            }
+
+            .input-area {
+                padding: var(--space-md);
+            }
+
+            .chat-history {
+                width: 100%;
+                right: -100%;
+            }
+
+            .fab-container {
+                bottom: var(--space-lg);
+                right: var(--space-lg);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .suggestion-chips {
@@ -643,98 +1323,40 @@
                 font-size: var(--text-xs);
                 padding: var(--space-xs) var(--space-sm);
             }
-
-            .input-area {
-                padding: var(--space-sm);
-            }
-
-            .chat-input {
-                font-size: var(--text-sm);
-                padding: var(--space-sm);
-            }
-
-            .send-btn {
-                width: 44px;
-                height: 44px;
-                font-size: 16px;
-            }
-
-            .input-action-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
-            }
         }
 
-        @media (max-width: 480px) {
-            .quick-actions {
-                grid-template-columns: repeat(2, 1fr);
+        /* ============================================
+           PRINT STYLES
+           ============================================ */
+        @media print {
+            .header,
+            .input-area,
+            .fab-container,
+            .chat-history {
+                display: none;
             }
 
-            .quick-action {
-                min-height: 60px;
-            }
-
-            .quick-action-icon {
-                font-size: 18px;
-            }
-
-            .quick-action-label {
-                font-size: 9px;
-            }
-
-            .suggestion-chips {
-                flex-wrap: wrap;
-            }
-
-            .suggestion-chip {
-                font-size: 11px;
-                padding: 6px 10px;
+            .chat-container {
+                max-width: none;
+                padding: 0;
             }
 
             .message-content {
-                max-width: 85%;
+                box-shadow: none;
+                border: 1px solid var(--border-light);
             }
         }
 
         /* ============================================
-           FOCUS VISIBLE STYLES
-           ============================================ */
-        :focus-visible {
-            outline: 3px solid var(--primary-green);
-            outline-offset: 2px;
-        }
-
-        /* ============================================
-           SCROLLBAR STYLING
-           ============================================ */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-grey);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-light);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* ============================================
-           LOADING SPINNER
+           LOADING ANIMATIONS
            ============================================ */
         .loading-spinner {
             width: 20px;
             height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top: 2px solid white;
+            border: 2px solid var(--border-light);
+            border-top: 2px solid var(--primary-green);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin var(--rotate-loading);
         }
 
         @keyframes spin {
@@ -743,204 +1365,349 @@
         }
 
         /* ============================================
-           NOTIFICATION STYLES
+           SUCCESS ANIMATIONS
            ============================================ */
-        .notification {
+        .success-animation {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: var(--primary-green);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            animation: slideInRight 0.3s ease;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
+        .success-checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--primary-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: successBounce var(--transition-bounce);
+        }
+
+        @keyframes successBounce {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .success-checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: var(--text-3xl);
+            font-weight: bold;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--kenya-red);
+            position: absolute;
+            animation: confettiFall 3s linear;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
                 opacity: 1;
             }
-        }
-
-        .notification.error {
-            background: var(--kenya-red);
-        }
-
-        .notification.info {
-            background: var(--text-secondary);
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="app">
-        <!-- ============================================
-             HEADER
-             ============================================ -->
-        <header class="header">
-            <div class="kenya-flag-accent">
-                <div class="black"></div>
-                <div class="red"></div>
-                <div class="green"></div>
-            </div>
-            <div class="header-content">
-                <div class="header-left">
-                    <div class="ai-avatar" role="button" tabindex="0" aria-label="Huduma AI Assistant">
-                        🤖
-                    </div>
-                    <h1 class="header-title">Huduma AI</h1>
-                </div>
-                <div class="header-controls">
-                    <div class="theme-toggle" role="group" aria-label="Theme selector">
-                        <div class="theme-option active" data-theme="light" role="button" tabindex="0" aria-label="Light theme">☀️</div>
-                        <div class="theme-option" data-theme="dark" role="button" tabindex="0" aria-label="Dark theme">🌙</div>
-                    </div>
-                    <button class="voice-btn" id="voiceBtn" aria-label="Voice input">
-                        🎤
-                    </button>
-                </div>
-            </div>
-        </header>
+<body data-theme="light">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-        <!-- ============================================
-             CHAT CONTAINER
-             ============================================ -->
-        <main class="chat-container">
-            <!-- ============================================
-                 WELCOME SECTION
-                 ============================================ -->
-            <section class="welcome-section">
-                <div class="welcome-content">
-                    <h2 class="welcome-title">Karibu! Welcome to Huduma AI</h2>
-                    <p class="welcome-subtitle">Your trusted government services assistant. I can help you with National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, and Police Clearance.</p>
-                    
-                    <!-- Quick Actions -->
-                    <div class="quick-actions">
-                        <div class="quick-action" data-service="National ID" role="button" tabindex="0">
-                            <span class="quick-action-icon">🆔</span>
-                            <span class="quick-action-label">National ID</span>
-                        </div>
-                        <div class="quick-action" data-service="SHA" role="button" tabindex="0">
-                            <span class="quick-action-icon">🏥</span>
-                            <span class="quick-action-label">SHA</span>
-                        </div>
-                        <div class="quick-action" data-service="KRA PIN" role="button" tabindex="0">
-                            <span class="quick-action-icon">💰</span>
-                            <span class="quick-action-label">KRA PIN</span>
-                        </div>
-                        <div class="quick-action" data-service="Passport" role="button" tabindex="0">
-                            <span class="quick-action-icon">🛂</span>
-                            <span class="quick-action-label">Passport</span>
-                        </div>
-                        <div class="quick-action" data-service="NSSF" role="button" tabindex="0">
-                            <span class="quick-action-icon">💼</span>
-                            <span class="quick-action-label">NSSF</span>
-                        </div>
-                        <div class="quick-action" data-service="Birth Certificate" role="button" tabindex="0">
-                            <span class="quick-action-icon">👶</span>
-                            <span class="quick-action-label">Birth Certificate</span>
-                        </div>
-                        <div class="quick-action" data-service="Driving Licence" role="button" tabindex="0">
-                            <span class="quick-action-icon">🚗</span>
-                            <span class="quick-action-label">Driving Licence</span>
-                        </div>
-                        <div class="quick-action" data-service="Business Registration" role="button" tabindex="0">
-                            <span class="quick-action-icon">📊</span>
-                            <span class="quick-action-label">Business</span>
-                        </div>
-                        <div class="quick-action" data-service="HELB" role="button" tabindex="0">
-                            <span class="quick-action-icon">🎓</span>
-                            <span class="quick-action-label">HELB</span>
-                        </div>
-                        <div class="quick-action" data-service="Police Clearance" role="button" tabindex="0">
-                            <span class="quick-action-icon">🚔</span>
-                            <span class="quick-action-label">Police Clearance</span>
-                        </div>
-                    </div>
+    <!-- ============================================
+         ENHANCED HEADER
+         ============================================ -->
+    <header class="header">
+        <div class="kenya-flag-accent"></div>
+        <div class="header-content">
+            <div class="header-left">
+                <div class="ai-avatar" role="button" tabindex="0" aria-label="Huduma AI Assistant">
+                    🤖
                 </div>
-            </section>
+                <h1 class="header-title">Huduma AI</h1>
+            </div>
+            <div class="header-controls">
+                <div class="theme-toggle" role="group" aria-label="Theme selector">
+                    <div class="theme-option active" data-theme="light" role="button" tabindex="0" aria-label="Light theme">☀️</div>
+                    <div class="theme-option" data-theme="dark" role="button" tabindex="0" aria-label="Dark theme">🌙</div>
+                    <div class="theme-option" data-theme="high-contrast" role="button" tabindex="0" aria-label="High contrast">⚡</div>
+                </div>
+                <button class="voice-btn" id="voiceBtn" aria-label="Voice input">
+                    🎤
+                </button>
+            </div>
+        </div>
+    </header>
 
-            <!-- ============================================
-                 SMART SUGGESTIONS
-                 ============================================ -->
-            <div class="smart-suggestions" id="smartSuggestions">
-                <div class="suggestions-container">
-                    <h3 class="suggestions-title">💡 Quick Suggestions</h3>
-                    <div class="suggestion-chips">
-                        <button class="suggestion-chip" data-suggestion="How to apply for SHA?">
-                            How to apply for SHA?
-                        </button>
-                        <button class="suggestion-chip" data-suggestion="Documents needed for passport">
-                            Documents needed for passport
-                        </button>
-                        <button class="suggestion-chip" data-suggestion="KRA PIN registration fees">
-                            KRA PIN registration fees
-                        </button>
-                        <button class="suggestion-chip" data-suggestion="Nearest Huduma Centre">
-                            Find nearest centre
-                        </button>
-                        <button class="suggestion-chip" data-suggestion="Check application status">
-                            Check application status
-                        </button>
-                    </div>
+    <!-- ============================================
+         ENHANCED WELCOME SECTION
+         ============================================ -->
+    <section class="welcome-section">
+        <div class="welcome-content">
+            <h2 class="welcome-title">Karibu! Welcome to Huduma AI</h2>
+            <p class="welcome-subtitle">Your trusted government services assistant - now with voice, smart suggestions, and more!</p>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-action" data-service="National ID" role="button" tabindex="0">
+                    <span class="quick-action-icon">🆔</span>
+                    <span class="quick-action-label">National ID</span>
+                </div>
+                <div class="quick-action" data-service="SHA" role="button" tabindex="0">
+                    <span class="quick-action-icon">🏥</span>
+                    <span class="quick-action-label">SHA</span>
+                </div>
+                <div class="quick-action" data-service="KRA PIN" role="button" tabindex="0">
+                    <span class="quick-action-icon">💰</span>
+                    <span class="quick-action-label">KRA PIN</span>
+                </div>
+                <div class="quick-action" data-service="Passport" role="button" tabindex="0">
+                    <span class="quick-action-icon">🛂</span>
+                    <span class="quick-action-label">Passport</span>
+                </div>
+                <div class="quick-action" data-service="NSSF" role="button" tabindex="0">
+                    <span class="quick-action-icon">💼</span>
+                    <span class="quick-action-label">NSSF</span>
+                </div>
+                <div class="quick-action" data-service="Birth Certificate" role="button" tabindex="0">
+                    <span class="quick-action-icon">👶</span>
+                    <span class="quick-action-label">Birth Certificate</span>
+                </div>
+                <div class="quick-action" data-service="Driving Licence" role="button" tabindex="0">
+                    <span class="quick-action-icon">🚗</span>
+                    <span class="quick-action-label">Driving Licence</span>
+                </div>
+                <div class="quick-action" data-service="Business Registration" role="button" tabindex="0">
+                    <span class="quick-action-icon">📊</span>
+                    <span class="quick-action-label">Business</span>
+                </div>
+                <div class="quick-action" data-service="HELB" role="button" tabindex="0">
+                    <span class="quick-action-icon">🎓</span>
+                    <span class="quick-action-label">HELB</span>
+                </div>
+                <div class="quick-action" data-service="Police Clearance" role="button" tabindex="0">
+                    <span class="quick-action-icon">🚔</span>
+                    <span class="quick-action-label">Police Clearance</span>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- ============================================
-                 CHAT MESSAGES
-                 ============================================ -->
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-content">
-                        <p class="message-text">Habari! I'm Huduma AI, your government services assistant. How can I help you today?</p>
-                        <span class="message-time">Just now</span>
-                    </div>
-                </div>
-            </div>
-        </main>
-
-        <!-- ============================================
-             INPUT AREA
-             ============================================ -->
-        <div class="input-area">
-            <div class="input-container">
-                <div class="input-wrapper">
-                    <textarea 
-                        id="chatInput" 
-                        class="chat-input" 
-                        placeholder="Ask me anything about Kenyan government services..."
-                        rows="1"
-                        aria-label="Type your message"
-                    ></textarea>
-                    <div class="input-actions">
-                        <button class="input-action-btn" id="attachBtn" aria-label="Attach documents">
-                            📎
-                        </button>
-                    </div>
-                </div>
-                <button id="sendBtn" class="send-btn" aria-label="Send message">
-                    <span id="sendIcon">➤</span>
+    <!-- ============================================
+         SMART SUGGESTIONS BAR
+         ============================================ -->
+    <div class="smart-suggestions" id="smartSuggestions">
+        <div class="suggestions-container">
+            <h3 class="suggestions-title">💡 Quick Suggestions</h3>
+            <div class="suggestion-chips">
+                <button class="suggestion-chip" data-suggestion="How to apply for SHA?">
+                    How to apply for SHA? <span class="shortcut">1</span>
+                </button>
+                <button class="suggestion-chip" data-suggestion="Documents needed for passport">
+                    Documents needed <span class="shortcut">2</span>
+                </button>
+                <button class="suggestion-chip" data-suggestion="KRA PIN registration fees">
+                    KRA fees <span class="shortcut">3</span>
+                </button>
+                <button class="suggestion-chip" data-suggestion="Nearest Huduma Centre">
+                    Find centre <span class="shortcut">4</span>
+                </button>
+                <button class="suggestion-chip" data-suggestion="Check application status">
+                    Check status <span class="shortcut">5</span>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- ============================================
+         MAIN CHAT CONTAINER
+         ============================================ -->
+    <main id="main-content" class="chat-container">
+        <!-- Document Upload Area -->
+        <div class="document-upload" id="documentUpload">
+            <div class="upload-icon">📄</div>
+            <p class="upload-text">Drag & drop documents here or click to upload</p>
+            <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Choose Files</button>
+            <input type="file" id="fileInput" multiple accept="image/*,.pdf,.doc,.docx" style="display: none;">
+            <div class="document-preview" id="documentPreview"></div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker" id="progressTracker">
+            <div class="progress-header">
+                <span class="progress-title">Application Progress</span>
+                <span class="progress-percentage" id="progressPercentage">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step">
+                    <div class="step-icon completed">✓</div>
+                    <span class="step-label">Started</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon active">2</div>
+                    <span class="step-label">Documents</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon">3</div>
+                    <span class="step-label">Review</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-icon">4</div>
+                    <span class="step-label">Submit</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Location Finder -->
+        <div class="location-finder" id="locationFinder">
+            <div class="location-header">
+                <span class="location-icon">📍</span>
+                <span class="location-title">Find Nearest Huduma Centre</span>
+            </div>
+            <div class="location-search">
+                <input type="text" class="location-input" placeholder="Enter your location or use GPS">
+                <button class="location-btn" onclick="findNearbyCentres()">Search</button>
+            </div>
+            <div class="location-results" id="locationResults">
+                <div class="location-item">
+                    <div class="location-name">Nairobi Huduma Centre</div>
+                    <div class="location-address">Kenya Re Towers, Taifa Road</div>
+                    <div class="location-distance">2.5 km away</div>
+                </div>
+                <div class="location-item">
+                    <div class="location-name">GPO Huduma Centre</div>
+                    <div class="location-address">General Post Office, Nairobi</div>
+                    <div class="location-distance">3.1 km away</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-content">
+                    <p class="message-text">Habari! I'm Huduma AI, your enhanced government services assistant. I can now help you with voice commands, document uploads, progress tracking, and finding nearby service centres! How can I assist you today?</p>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================
+         ENHANCED INPUT AREA
+         ============================================ -->
+    <div class="input-area">
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea 
+                    id="chatInput" 
+                    class="chat-input" 
+                    placeholder="Ask me anything about Kenyan government services... (Press 🎤 for voice)"
+                    rows="1"
+                    aria-label="Type your message"
+                ></textarea>
+                <div class="input-actions">
+                    <button class="input-action-btn" id="attachBtn" aria-label="Attach documents">
+                        📎
+                    </button>
+                    <button class="input-action-btn" id="locationBtn" aria-label="Find location">
+                        📍
+                    </button>
+                    <button class="input-action-btn" id="historyBtn" aria-label="Chat history">
+                        📝
+                    </button>
+                </div>
+            </div>
+            <button id="sendBtn" class="send-btn" aria-label="Send message">
+                <span id="sendIcon">➤</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ============================================
+         CHAT HISTORY SIDEBAR
+         ============================================ -->
+    <div class="chat-history" id="chatHistory">
+        <div class="history-header">
+            <span class="history-title">Chat History</span>
+            <button class="history-close" id="historyClose">✕</button>
+        </div>
+        <div class="history-search">
+            <input type="text" class="history-input" placeholder="Search conversations...">
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="history-item">
+                <div class="history-date">Today, 2:30 PM</div>
+                <div class="history-preview">How to apply for SHA registration...</div>
+            </div>
+            <div class="history-item">
+                <div class="history-date">Yesterday, 10:15 AM</div>
+                <div class="history-preview">Documents needed for passport application...</div>
+            </div>
+            <div class="history-item">
+                <div class="history-date">Dec 20, 3:45 PM</div>
+                <div class="history-preview">KRA PIN registration process...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         FLOATING ACTION BUTTONS
+         ============================================ -->
+    <div class="fab-container">
+        <div class="fab-options" id="fabOptions">
+            <button class="fab-option" id="fabProgress" aria-label="Track progress">
+                📊
+                <span class="fab-tooltip">Track Progress</span>
+            </button>
+            <button class="fab-option" id="fabChecklist" aria-label="View checklist">
+                ✅
+                <span class="fab-tooltip">Checklist</span>
+            </button>
+            <button class="fab-option" id="fabAccessibility" aria-label="Accessibility options">
+                ♿
+                <span class="fab-tooltip">Accessibility</span>
+            </button>
+        </div>
+        <button class="fab-main" id="fabMain" aria-label="More options">
+            +
+        </button>
+    </div>
+
+    <!-- Success Animation Container -->
+    <div class="success-animation" id="successAnimation" style="display: none;">
+        <div class="success-checkmark"></div>
+    </div>
+
     <script>
         // ============================================
-        // CLEAN JAVASCRIPT
+        // ENHANCED JAVASCRIPT - ALL NEW FEATURES
         // ============================================
         
-        // Global State
+        // Global State Management
         const state = {
             isRecording: false,
+            currentTheme: 'light',
+            uploadedDocuments: [],
+            chatHistory: [],
+            currentProgress: 0,
             voiceSupported: false,
-            recognition: null
+            recognition: null,
+            synthesis: null
         };
 
         // Initialize on DOM load
@@ -950,14 +1717,19 @@
 
         function initializeApp() {
             initializeVoiceFeatures();
+            initializeThemeSystem();
             initializeEventListeners();
+            initializeSmartFeatures();
+            loadChatHistory();
             showSmartSuggestions();
+            initializeAccessibility();
         }
 
         // ============================================
         // VOICE FEATURES
         // ============================================
         function initializeVoiceFeatures() {
+            // Check for browser support
             if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
                 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
                 state.recognition = new SpeechRecognition();
@@ -982,6 +1754,11 @@
                 };
 
                 state.voiceSupported = true;
+            }
+
+            // Initialize speech synthesis
+            if ('speechSynthesis' in window) {
+                state.synthesis = window.speechSynthesis;
             }
         }
 
@@ -1020,6 +1797,60 @@
             }
         }
 
+        function speakText(text) {
+            if (!state.synthesis) return;
+
+            // Cancel any ongoing speech
+            state.synthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+
+            // Try to use a female voice for assistant
+            const voices = state.synthesis.getVoices();
+            const femaleVoice = voices.find(voice => voice.name.includes('Female') || voice.name.includes('Samantha'));
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+
+            state.synthesis.speak(utterance);
+        }
+
+        // ============================================
+        // THEME SYSTEM
+        // ============================================
+        function initializeThemeSystem() {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('hudumaTheme') || 'light';
+            setTheme(savedTheme);
+
+            // Theme toggle listeners
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const theme = this.dataset.theme;
+                    setTheme(theme);
+                });
+            });
+        }
+
+        function setTheme(theme) {
+            state.currentTheme = theme;
+            document.body.setAttribute('data-theme', theme);
+            
+            // Update active theme button
+            document.querySelectorAll('.theme-option').forEach(option => {
+                option.classList.toggle('active', option.dataset.theme === theme);
+            });
+
+            // Save preference
+            localStorage.setItem('hudumaTheme', theme);
+
+            // Announce to screen readers
+            announceToScreenReader(`Theme changed to ${theme}`);
+        }
+
         // ============================================
         // EVENT LISTENERS
         // ============================================
@@ -1027,7 +1858,7 @@
             // Send button
             document.getElementById('sendBtn').addEventListener('click', sendMessage);
             
-            // Enter key to send
+            // Enter key to send (Shift+Enter for new line)
             document.getElementById('chatInput').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -1061,11 +1892,118 @@
                     sendMessage();
                 });
             });
+
+            // Document upload
+            document.getElementById('attachBtn').addEventListener('click', function() {
+                document.getElementById('documentUpload').classList.toggle('active');
+            });
+
+            // File input
+            document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+
+            // Drag and drop
+            const uploadArea = document.getElementById('documentUpload');
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            // Location finder
+            document.getElementById('locationBtn').addEventListener('click', function() {
+                document.getElementById('locationFinder').classList.toggle('active');
+            });
+
+            // Chat history
+            document.getElementById('historyBtn').addEventListener('click', function() {
+                document.getElementById('chatHistory').classList.add('active');
+            });
+
+            document.getElementById('historyClose').addEventListener('click', function() {
+                document.getElementById('chatHistory').classList.remove('active');
+            });
+
+            // FAB
+            document.getElementById('fabMain').addEventListener('click', function() {
+                this.classList.toggle('active');
+                document.getElementById('fabOptions').classList.toggle('active');
+            });
+
+            document.getElementById('fabProgress').addEventListener('click', function() {
+                document.getElementById('progressTracker').classList.toggle('active');
+                closeFAB();
+            });
+
+            document.getElementById('fabChecklist').addEventListener('click', function() {
+                showChecklist();
+                closeFAB();
+            });
+
+            document.getElementById('fabAccessibility').addEventListener('click', function() {
+                showAccessibilityOptions();
+                closeFAB();
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey || e.metaKey) {
+                    switch(e.key) {
+                        case '1':
+                            e.preventDefault();
+                            document.getElementById('chatInput').value = 'How to apply for SHA?';
+                            sendMessage();
+                            break;
+                        case '2':
+                            e.preventDefault();
+                            document.getElementById('chatInput').value = 'Documents needed for passport';
+                            sendMessage();
+                            break;
+                        case '3':
+                            e.preventDefault();
+                            document.getElementById('chatInput').value = 'KRA PIN registration fees';
+                            sendMessage();
+                            break;
+                        case '4':
+                            e.preventDefault();
+                            document.getElementById('locationFinder').classList.add('active');
+                            break;
+                        case '5':
+                            e.preventDefault();
+                            document.getElementById('progressTracker').classList.add('active');
+                            break;
+                        case '/':
+                            e.preventDefault();
+                            document.getElementById('chatInput').focus();
+                            break;
+                    }
+                }
+            });
+        }
+
+        function closeFAB() {
+            document.getElementById('fabMain').classList.remove('active');
+            document.getElementById('fabOptions').classList.remove('active');
         }
 
         // ============================================
         // SMART FEATURES
         // ============================================
+        function initializeSmartFeatures() {
+            // Initialize smart suggestions based on context
+            setTimeout(() => {
+                updateSmartSuggestions('greeting');
+            }, 2000);
+        }
+
         function showSmartSuggestions() {
             const suggestions = document.getElementById('smartSuggestions');
             setTimeout(() => {
@@ -1073,8 +2011,177 @@
             }, 1000);
         }
 
+        function updateSmartSuggestions(context) {
+            const chips = document.querySelectorAll('.suggestion-chip');
+            // Update suggestions based on conversation context
+            // This would be enhanced with AI context analysis
+        }
+
         // ============================================
-        // CHAT FUNCTIONALITY
+        // DOCUMENT HANDLING
+        // ============================================
+        function handleFileUpload(event) {
+            handleFiles(event.target.files);
+        }
+
+        function handleFiles(files) {
+            const preview = document.getElementById('documentPreview');
+            
+            Array.from(files).forEach(file => {
+                if (validateFile(file)) {
+                    state.uploadedDocuments.push(file);
+                    displayDocumentPreview(file, preview);
+                    updateProgress(25); // Update progress for document upload
+                }
+            });
+
+            if (state.uploadedDocuments.length > 0) {
+                showNotification('Documents uploaded successfully!', 'success');
+                showSuccessAnimation();
+            }
+        }
+
+        function validateFile(file) {
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+
+            if (file.size > maxSize) {
+                showNotification('File size must be less than 5MB', 'error');
+                return false;
+            }
+
+            if (!allowedTypes.includes(file.type)) {
+                showNotification('Invalid file type. Please upload images, PDF, or Word documents.', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function displayDocumentPreview(file, container) {
+            const item = document.createElement('div');
+            item.className = 'document-item';
+            
+            const icon = getFileIcon(file.type);
+            const name = file.name.length > 20 ? file.name.substring(0, 20) + '...' : file.name;
+            
+            item.innerHTML = `
+                <span class="document-item-icon">${icon}</span>
+                <span class="document-item-name">${name}</span>
+                <button class="document-item-remove" onclick="removeDocument('${file.name}')">✕</button>
+            `;
+            
+            container.appendChild(item);
+        }
+
+        function getFileIcon(fileType) {
+            if (fileType.includes('image')) return '🖼️';
+            if (fileType.includes('pdf')) return '📄';
+            if (fileType.includes('word')) return '📝';
+            return '📎';
+        }
+
+        function removeDocument(fileName) {
+            state.uploadedDocuments = state.uploadedDocuments.filter(doc => doc.name !== fileName);
+            
+            // Re-render preview
+            const preview = document.getElementById('documentPreview');
+            preview.innerHTML = '';
+            state.uploadedDocuments.forEach(file => {
+                displayDocumentPreview(file, preview);
+            });
+            
+            showNotification('Document removed', 'info');
+        }
+
+        // ============================================
+        // PROGRESS TRACKING
+        // ============================================
+        function updateProgress(percentage) {
+            state.currentProgress = percentage;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressPercentage').textContent = percentage + '%';
+            
+            // Update step icons
+            updateProgressSteps(percentage);
+            
+            // Show progress tracker if not visible
+            if (percentage > 0) {
+                document.getElementById('progressTracker').classList.add('active');
+            }
+        }
+
+        function updateProgressSteps(percentage) {
+            const steps = document.querySelectorAll('.step-icon');
+            const activeStep = Math.floor(percentage / 25);
+            
+            steps.forEach((step, index) => {
+                step.classList.remove('completed', 'active');
+                if (index < activeStep) {
+                    step.classList.add('completed');
+                    step.innerHTML = '✓';
+                } else if (index === activeStep) {
+                    step.classList.add('active');
+                }
+            });
+        }
+
+        // ============================================
+        // LOCATION FINDER
+        // ============================================
+        function findNearbyCentres() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        searchHudumaCentres(latitude, longitude);
+                    },
+                    error => {
+                        showNotification('Unable to get your location. Please enter manually.', 'error');
+                    }
+                );
+            } else {
+                showNotification('Geolocation is not supported by your browser.', 'error');
+            }
+        }
+
+        function searchHudumaCentres(lat, lng) {
+            // Mock search results - in real app, this would call an API
+            const centres = [
+                { name: 'Nairobi Huduma Centre', address: 'Kenya Re Towers, Taifa Road', distance: 2.5 },
+                { name: 'GPO Huduma Centre', address: 'General Post Office, Nairobi', distance: 3.1 },
+                { name: 'Kenyatta Avenue Huduma Centre', address: 'Kenyatta Avenue, Nairobi', distance: 4.2 }
+            ];
+
+            displaySearchResults(centres);
+        }
+
+        function displaySearchResults(centres) {
+            const resultsContainer = document.getElementById('locationResults');
+            resultsContainer.innerHTML = '';
+            
+            centres.forEach(centre => {
+                const item = document.createElement('div');
+                item.className = 'location-item';
+                item.innerHTML = `
+                    <div class="location-name">${centre.name}</div>
+                    <div class="location-address">${centre.address}</div>
+                    <div class="location-distance">${centre.distance} km away</div>
+                `;
+                item.addEventListener('click', () => {
+                    showDirections(centre);
+                });
+                resultsContainer.appendChild(item);
+            });
+        }
+
+        function showDirections(centre) {
+            showNotification(`Getting directions to ${centre.name}...`, 'info');
+            // In real app, this would open maps or provide directions
+        }
+
+        // ============================================
+        // CHAT FUNCTIONALITY (Enhanced)
         // ============================================
         async function sendMessage() {
             const input = document.getElementById('chatInput');
@@ -1096,7 +2203,7 @@
             showTypingIndicator();
             
             try {
-                // Call API
+                // Call the real API with enhanced context
                 const response = await sendToHudumaAI(message);
                 
                 // Hide typing indicator
@@ -1105,12 +2212,28 @@
                 // Add bot response
                 addMessage(response.reply, 'bot');
                 
+                // Speak response if voice is enabled
+                if (state.synthesis && Math.random() > 0.7) { // 30% chance to speak
+                    speakText(response.reply);
+                }
+                
+                // Update smart suggestions based on context
+                updateSmartSuggestions(message);
+                
+                // Update progress if applicable
+                if (message.toLowerCase().includes('apply') || message.toLowerCase().includes('register')) {
+                    updateProgress(25);
+                }
+                
             } catch (error) {
                 hideTypingIndicator();
                 addMessage('Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi.', 'bot');
             }
             
             updateSendButton(false);
+            
+            // Save to history
+            saveToHistory(message, 'user');
         }
 
         function addMessage(text, sender) {
@@ -1131,6 +2254,15 @@
             
             // Scroll to bottom
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Add entrance animation
+            messageDiv.style.opacity = '0';
+            messageDiv.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                messageDiv.style.transition = 'all 0.3s ease';
+                messageDiv.style.opacity = '1';
+                messageDiv.style.transform = 'translateY(0)';
+            }, 10);
         }
 
         function showTypingIndicator() {
@@ -1170,17 +2302,27 @@
         }
 
         // ============================================
-        // API CALL
+        // API CALL (Enhanced with context)
         // ============================================
         async function sendToHudumaAI(userMessage) {
+            // Use deployed URL - change to '/api/chat' for production
             const apiUrl = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
                 ? 'https://huduma-3nxconbf6-netz1-blips-projects.vercel.app/api/chat'
                 : '/api/chat';
             
+            // Enhanced context including uploaded documents and progress
+            const context = {
+                message: userMessage,
+                uploadedDocuments: state.uploadedDocuments.map(doc => ({ name: doc.name, type: doc.type })),
+                currentProgress: state.currentProgress,
+                theme: state.currentTheme,
+                timestamp: new Date().toISOString()
+            };
+            
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMessage })
+                body: JSON.stringify(context)
             });
             
             if (!response.ok) {
@@ -1192,26 +2334,207 @@
         }
 
         // ============================================
+        // CHAT HISTORY
+        // ============================================
+        function saveToHistory(message, sender) {
+            const historyItem = {
+                message,
+                sender,
+                timestamp: new Date().toISOString()
+            };
+            
+            state.chatHistory.push(historyItem);
+            
+            // Keep only last 50 conversations
+            if (state.chatHistory.length > 50) {
+                state.chatHistory = state.chatHistory.slice(-50);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('hudumaChatHistory', JSON.stringify(state.chatHistory));
+            
+            // Update history display
+            updateHistoryDisplay();
+        }
+
+        function loadChatHistory() {
+            const saved = localStorage.getItem('hudumaChatHistory');
+            if (saved) {
+                state.chatHistory = JSON.parse(saved);
+                updateHistoryDisplay();
+            }
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = '';
+            
+            // Group by date
+            const grouped = groupHistoryByDate(state.chatHistory);
+            
+            Object.entries(grouped).forEach(([date, messages]) => {
+                const firstMessage = messages[0];
+                const preview = firstMessage.message.substring(0, 50) + '...';
+                
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <div class="history-date">${date}</div>
+                    <div class="history-preview">${preview}</div>
+                `;
+                item.addEventListener('click', () => {
+                    loadConversation(messages);
+                });
+                historyList.appendChild(item);
+            });
+        }
+
+        function groupHistoryByDate(history) {
+            const grouped = {};
+            
+            history.forEach(item => {
+                const date = new Date(item.timestamp).toLocaleDateString();
+                if (!grouped[date]) {
+                    grouped[date] = [];
+                }
+                grouped[date].push(item);
+            });
+            
+            return grouped;
+        }
+
+        function loadConversation(messages) {
+            // Clear current chat
+            document.getElementById('chatMessages').innerHTML = '';
+            
+            // Load selected conversation
+            messages.forEach(item => {
+                addMessage(item.message, item.sender);
+            });
+            
+            // Close history sidebar
+            document.getElementById('chatHistory').classList.remove('active');
+        }
+
+        // ============================================
         // UTILITY FUNCTIONS
         // ============================================
         function showNotification(message, type = 'info') {
+            // Create notification element
             const notification = document.createElement('div');
             notification.className = `notification notification-${type}`;
             notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'error' ? 'var(--kenya-red)' : type === 'success' ? 'var(--primary-green)' : 'var(--text-secondary)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                animation: slideInRight 0.3s ease;
+            `;
             
             document.body.appendChild(notification);
             
             // Auto remove after 3 seconds
             setTimeout(() => {
-                notification.style.animation = 'slideInRight 0.3s ease reverse';
+                notification.style.animation = 'slideOutRight 0.3s ease';
                 setTimeout(() => notification.remove(), 300);
             }, 3000);
         }
 
-        // Focus input on load
-        window.addEventListener('load', () => {
-            document.getElementById('chatInput').focus();
-        });
+        function showSuccessAnimation() {
+            const animation = document.getElementById('successAnimation');
+            animation.style.display = 'block';
+            
+            // Create confetti
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    createConfetti();
+                }, i * 100);
+            }
+            
+            // Hide after 2 seconds
+            setTimeout(() => {
+                animation.style.display = 'none';
+            }, 2000);
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * window.innerWidth + 'px';
+            confetti.style.background = ['#BB1E10', '#006600', '#000000', '#ffffff'][Math.floor(Math.random() * 4)];
+            confetti.style.animationDelay = Math.random() * 0.5 + 's';
+            document.body.appendChild(confetti);
+            
+            setTimeout(() => confetti.remove(), 3000);
+        }
+
+        function showChecklist() {
+            showNotification('Checklist feature coming soon!', 'info');
+        }
+
+        function showAccessibilityOptions() {
+            showNotification('Accessibility options: Press Ctrl+/ to focus input, Ctrl+1-5 for quick actions', 'info');
+        }
+
+        function announceToScreenReader(message) {
+            const announcement = document.createElement('div');
+            announcement.setAttribute('role', 'status');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.className = 'sr-only';
+            announcement.textContent = message;
+            document.body.appendChild(announcement);
+            setTimeout(() => announcement.remove(), 1000);
+        }
+
+        function initializeAccessibility() {
+            // Add ARIA labels
+            document.getElementById('chatInput').setAttribute('aria-label', 'Type your message here');
+            document.getElementById('sendBtn').setAttribute('aria-label', 'Send message');
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    // Close any open modals
+                    document.getElementById('chatHistory').classList.remove('active');
+                    document.getElementById('documentUpload').classList.remove('active');
+                    document.getElementById('locationFinder').classList.remove('active');
+                    closeFAB();
+                }
+            });
+        }
+
+        // Add CSS animations dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

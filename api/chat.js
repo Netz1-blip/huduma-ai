@@ -1,29 +1,17 @@
 const fs = require('fs');
 const path = require('path');
 
-// ------------------------------
-// Constants
-// ------------------------------
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-// Cache settings
-let cache = {
-  index: { data: null, timestamp: 0 },
-  services: {}
-};
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+let cache = { index: { data: null, timestamp: 0 }, services: {} };
+const CACHE_TTL = 5 * 60 * 1000;
 
-function isCacheValid(ts) {
-  return ts && (Date.now() - ts) < CACHE_TTL;
-}
+function isCacheValid(ts) { return ts && (Date.now() - ts) < CACHE_TTL; }
 
 function trimServiceContent(raw) {
-  let trimmed = raw
-    .replace(/^#+\s?/gm, '')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+  let trimmed = raw.replace(/^#+\s?/gm, '').replace(/\n{3,}/g, '\n\n').trim();
   if (trimmed.length > 2500) trimmed = trimmed.substring(0, 2500) + '… (truncated)';
   return trimmed;
 }
@@ -55,10 +43,7 @@ function detectLanguage(text) {
   return swScore > 0 ? 'sw' : 'en';
 }
 
-// ------------------------------
-// Your complete super prompt (unchanged)
-// ------------------------------
-const SYSTEM_PROMPT_BASE = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
+const SYSTEM_PROMPT = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
 
 ## CORE IDENTITY
 - You are Kenyan. You understand the lived experience of ordinary citizens navigating Huduma Centres, eCitizen portals, long queues, conflicting information, and occasional bribe solicitation.
@@ -114,12 +99,9 @@ function getSystemPrompt(lang) {
   const langInstruction = lang === 'sw'
     ? `\nIMPORTANT: The user asked in Swahili. You MUST answer in Kenyan Swahili (not Tanzanian). Use natural, conversational Swahili.`
     : `\nIMPORTANT: The user asked in English. You MUST answer in clear, simple English.`;
-  return SYSTEM_PROMPT_BASE + langInstruction;
+  return SYSTEM_PROMPT + langInstruction;
 }
 
-// ------------------------------
-// Main handler
-// ------------------------------
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -227,5 +209,4 @@ module.exports = async function handler(req, res) {
     console.error(error);
     return res.status(500).json({ error: 'Internal server error', details: error.message });
   }
-};   
- 
+};

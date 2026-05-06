@@ -1,13 +1,64 @@
 const fs = require('fs');
 const path = require('path');
 
-// Groq API configuration – set GROQ_API_KEY in Vercel environment variables
+// ------------------------------
+// Constants
+// ------------------------------
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-// Optimized system prompt with full grounding, warmth, and proactive guidance
-const SYSTEM_PROMPT = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
+// Cache settings
+let cache = {
+  index: { data: null, timestamp: 0 },
+  services: {}
+};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+function isCacheValid(ts) {
+  return ts && (Date.now() - ts) < CACHE_TTL;
+}
+
+function trimServiceContent(raw) {
+  let trimmed = raw
+    .replace(/^#+\s?/gm, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+  if (trimmed.length > 2500) trimmed = trimmed.substring(0, 2500) + '… (truncated)';
+  return trimmed;
+}
+
+function loadIndex() {
+  if (cache.index.data && isCacheValid(cache.index.timestamp)) return cache.index.data;
+  const indexPath = path.join(process.cwd(), 'services', 'index.json');
+  const raw = fs.readFileSync(indexPath, 'utf8');
+  const data = JSON.parse(raw);
+  cache.index = { data, timestamp: Date.now() };
+  return data;
+}
+
+function loadServiceContent(filePath) {
+  if (cache.services[filePath] && isCacheValid(cache.services[filePath].timestamp)) {
+    return cache.services[filePath].data;
+  }
+  const raw = fs.readFileSync(filePath, 'utf8');
+  const trimmed = trimServiceContent(raw);
+  cache.services[filePath] = { data: trimmed, timestamp: Date.now() };
+  return trimmed;
+}
+
+function detectLanguage(text) {
+  const swWords = ['habari', 'naomba', 'tafadhali', 'asante', 'sawa', 'kwa', 'nisaidie', 'nataka', 'kupata', 'gharama', 'ada', 'malipo', 'kitambulisho', 'cheti', 'kuzaliwa', 'bima', 'afya', 'kodi', 'leseni', 'biashara', 'mkopo'];
+  const lower = text.toLowerCase();
+  let swScore = 0;
+  for (const w of swWords) if (lower.includes(w)) swScore++;
+  return swScore > 0 ? 'sw' : 'en';
+}
+
+// ------------------------------
+// Your complete super prompt (unchanged)
+// ------------------------------
+const SYSTEM_PROMPT_BASE = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
 
 ## CORE IDENTITY
 - You are Kenyan. You understand the lived experience of ordinary citizens navigating Huduma Centres, eCitizen portals, long queues, conflicting information, and occasional bribe solicitation.
@@ -59,32 +110,30 @@ For service-related questions:
 
 Your ultimate goal: Every Kenyan who speaks to you leaves feeling more informed, less anxious, and genuinely helped — even if the government system itself is slow or frustrating. You are the bridge between citizens and the services they deserve.`;
 
+function getSystemPrompt(lang) {
+  const langInstruction = lang === 'sw'
+    ? `\nIMPORTANT: The user asked in Swahili. You MUST answer in Kenyan Swahili (not Tanzanian). Use natural, conversational Swahili.`
+    : `\nIMPORTANT: The user asked in English. You MUST answer in clear, simple English.`;
+  return SYSTEM_PROMPT_BASE + langInstruction;
+}
+
+// ------------------------------
+// Main handler
+// ------------------------------
 module.exports = async function handler(req, res) {
-  // Set CORS headers for all responses
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
-  // Handle preflight OPTIONS request
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Only POST requests allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST requests allowed' });
 
   try {
     const { message } = req.body;
-    if (!message) {
-      return res.status(400).json({ error: 'Missing message in request body' });
-    }
+    if (!message) return res.status(400).json({ error: 'Missing message in request body' });
 
-    // --- FIXED: Use the correct folder name 'services' ---
-    const indexPath = path.join(process.cwd(), 'services', 'index.json');
-    const index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    const index = loadIndex();
 
-    // Simple keyword matching – count matches per service
     const userMessage = message.toLowerCase().trim();
     let bestMatch = null;
     let highestScore = 0;
@@ -92,9 +141,9 @@ module.exports = async function handler(req, res) {
     for (const service of index) {
       let score = 0;
       for (const keyword of service.keywords) {
-        if (userMessage.includes(keyword.toLowerCase())) {
-          score++;
-        }
+        const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escaped}\\b`, 'i');
+        if (regex.test(userMessage)) score++;
       }
       if (score > highestScore) {
         highestScore = score;
@@ -102,30 +151,33 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // Build the conversation messages
-    const messages = [
-      { role: 'system', content: SYSTEM_PROMPT },
-    ];
-
-    // If a service is matched, inject its knowledge base
-    if (bestMatch && highestScore > 0) {
-      const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
-      const serviceContent = fs.readFileSync(mdPath, 'utf8');
-      messages.push({
-        role: 'user',
-        content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nBased on the official information above, please answer the following user question:`,
+    if (!bestMatch || highestScore === 0) {
+      const serviceList = index.map(s => s.title).join(', ');
+      return res.status(200).json({
+        reply: `Samahani, sijaelewa ni huduma gani unahitaji. Tafadhali chagua moja kati ya hizi: ${serviceList}.`
       });
     }
 
-    // Finally add the actual user message
-    messages.push({ role: 'user', content: message });
+    const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
+    const serviceContent = loadServiceContent(mdPath);
+    const lang = detectLanguage(message);
+    const systemPrompt = getSystemPrompt(lang);
 
-    // Call Groq API with fallback models
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      {
+        role: 'user',
+        content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
+      }
+    ];
+
     let reply = null;
     let lastError = null;
 
     for (const model of GROQ_MODELS) {
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
         const response = await fetch(GROQ_API_URL, {
           method: 'POST',
           headers: {
@@ -138,40 +190,38 @@ module.exports = async function handler(req, res) {
             temperature: 0.3,
             max_tokens: 3500,
           }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           const data = await response.json();
           reply = data.choices[0].message.content;
-          break; // Success, exit loop
+          break;
         }
 
-        const errorData = await response.json();
-        lastError = errorData;
-        const isRateLimit = errorData?.error?.code === 'rate_limit_exceeded';
-        
+        const errData = await response.json();
+        lastError = errData;
+        const isRateLimit = errData?.error?.code === 'rate_limit_exceeded';
         if (!isRateLimit) {
-          // Non-rate-limit error – stop and report
-          console.error(`Groq API error with ${model}:`, errorData);
-          return res.status(500).json({ error: 'Groq API error', details: errorData });
+          console.error(`Groq API error with ${model}:`, errData);
+          return res.status(500).json({ error: 'Groq API error', details: errData });
         }
-        // Rate limit: try next model
         console.log(`Model ${model} rate limited, trying next...`);
       } catch (err) {
         lastError = err;
-        console.error(`Request error with ${model}:`, err);
+        if (err.name === 'AbortError') console.error(`Timeout for ${model}`);
+        else console.error(`Request error with ${model}:`, err);
       }
     }
 
     if (!reply) {
-      // All models exhausted (rate limits)
-      return res.status(503).json({ 
-        error: 'All models are currently rate limited. Please try again in a few hours.',
+      return res.status(503).json({
+        error: 'All models are currently rate limited or unavailable. Try again later.',
         details: lastError
       });
     }
 
-    // Return the reply to the frontend
     return res.status(200).json({ reply });
   } catch (error) {
     console.error(error);

@@ -6,6 +6,11 @@ const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 // Version: 2.0 - Fixed no-match fallback
 
+// Check if API key is available
+if (!GROQ_API_KEY) {
+  console.error('GROQ_API_KEY is not set in environment variables');
+}
+
 let cache = { index: { data: null, timestamp: 0 }, services: {} };
 const CACHE_TTL = 5 * 60 * 1000;
 
@@ -113,6 +118,9 @@ module.exports = async function handler(req, res) {
   try {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'Missing message in request body' });
+
+    console.log('Received message:', message);
+    console.log('GROQ_API_KEY exists:', !!GROQ_API_KEY);
 
     const index = loadIndex();
 

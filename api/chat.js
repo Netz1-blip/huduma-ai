@@ -38,9 +38,8 @@ function loadServiceContent(filePath) {
 function detectLanguage(text) {
   const swWords = ['habari', 'naomba', 'tafadhali', 'asante', 'sawa', 'kwa', 'nisaidie', 'nataka', 'kupata', 'gharama', 'ada', 'malipo', 'kitambulisho', 'cheti', 'kuzaliwa', 'bima', 'afya', 'kodi', 'leseni', 'biashara', 'mkopo'];
   const lower = text.toLowerCase();
-  let swScore = 0;
-  for (const w of swWords) if (lower.includes(w)) swScore++;
-  return swScore > 0 ? 'sw' : 'en';
+  for (const w of swWords) if (lower.includes(w)) return 'sw';
+  return 'en';
 }
 
 const SYSTEM_PROMPT = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
@@ -113,6 +112,16 @@ module.exports = async function handler(req, res) {
   try {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'Missing message in request body' });
+
+    // ----- GREETING DETECTION (MUST BE FIRST) -----
+    const greetings = ['hi', 'hello', 'habari', 'jambo', 'sasa', 'niaje', 'vipi', 'good morning', 'good afternoon', 'good evening'];
+    const trimmedMsg = message.toLowerCase().trim();
+    if (greetings.includes(trimmedMsg)) {
+      return res.status(200).json({
+        reply: "Habari nzuri! Namna unavyo? Ninafurahi kukusaidia leo. Je, unahitaji msaada wa huduma gani? Tafadhali niulize kuhusu: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, au Police Clearance (Certificate of Good Conduct)."
+      });
+    }
+    // ----------------------------------------------
 
     const index = loadIndex();
 

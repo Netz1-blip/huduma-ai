@@ -18,7 +18,7 @@ function isCacheValid(ts) { return ts && (Date.now() - ts) < CACHE_TTL; }
 
 function trimServiceContent(raw) {
   let trimmed = raw.replace(/^#+\s?/gm, '').replace(/\n{3,}/g, '\n\n').trim();
-  if (trimmed.length > 2500) trimmed = trimmed.substring(0, 2500) + '… (truncated)';
+  if (trimmed.length > 1500) trimmed = trimmed.substring(0, 1500) + '… (truncated)';
   return trimmed;
 }
 
@@ -157,13 +157,22 @@ module.exports = async function handler(req, res) {
       console.log('Loading service from:', mdPath);
       console.log('Best match:', bestMatch.title);
       
-      const serviceContent = loadServiceContent(mdPath);
-      console.log('Service content loaded successfully, length:', serviceContent.length);
-      
-      messages.push({
-        role: 'user',
-        content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
-      });
+      try {
+        const serviceContent = loadServiceContent(mdPath);
+        console.log('Service content loaded successfully, length:', serviceContent.length);
+        
+        messages.push({
+          role: 'user',
+          content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
+        });
+      } catch (loadError) {
+        console.error('Failed to load service content:', loadError);
+        // Fallback to basic info without the file content
+        messages.push({
+          role: 'user',
+          content: `The user is asking about ${bestMatch.title}. Please provide a helpful overview of this Kenyan government service. User question: ${message}`
+        });
+      }
     } else {
       // No service match: just send the user message, let super prompt handle it
       console.log('No service match, sending message directly to LLM');

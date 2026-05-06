@@ -113,18 +113,9 @@ module.exports = async function handler(req, res) {
     const { message } = req.body;
     if (!message) return res.status(400).json({ error: 'Missing message in request body' });
 
-    // ----- GREETING DETECTION (MUST BE FIRST) -----
-    const greetings = ['hi', 'hello', 'habari', 'jambo', 'sasa', 'niaje', 'vipi', 'good morning', 'good afternoon', 'good evening'];
-    const trimmedMsg = message.toLowerCase().trim();
-    if (greetings.includes(trimmedMsg)) {
-      return res.status(200).json({
-        reply: "Habari nzuri! Namna unavyo? Ninafurahi kukusaidia leo. Je, unahitaji msaada wa huduma gani? Tafadhali niulize kuhusu: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, au Police Clearance (Certificate of Good Conduct)."
-      });
-    }
-    // ----------------------------------------------
-
     const index = loadIndex();
 
+    // Keyword matching
     const userMessage = message.toLowerCase().trim();
     let bestMatch = null;
     let highestScore = 0;
@@ -142,25 +133,22 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    if (!bestMatch || highestScore === 0) {
-      const serviceList = index.map(s => s.title).join(', ');
-      return res.status(200).json({
-        reply: `Samahani, sijaelewa ni huduma gani unahitaji. Tafadhali chagua moja kati ya hizi: ${serviceList}.`
-      });
-    }
-
-    const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
-    const serviceContent = loadServiceContent(mdPath);
+    // Build messages with system prompt
     const lang = detectLanguage(message);
-    const systemPrompt = getSystemPrompt(lang);
+    const messages = [{ role: 'system', content: getSystemPrompt(lang) }];
 
-    const messages = [
-      { role: 'system', content: systemPrompt },
-      {
+    // Inject official information ONLY if a service is matched
+    if (bestMatch && highestScore > 0) {
+      const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
+      const serviceContent = loadServiceContent(mdPath);
+      messages.push({
         role: 'user',
         content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
-      }
-    ];
+      });
+    } else {
+      // No service match: just send the user message, let super prompt handle it
+      messages.push({ role: 'user', content: message });
+    }
 
     let reply = null;
     let lastError = null;

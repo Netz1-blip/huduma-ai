@@ -225,17 +225,45 @@ module.exports = async function handler(req, res) {
 
     if (!reply) {
       console.error('All Groq models failed:', lastError);
-      // Fallback to a simple response when API fails
+      // Enhanced fallback responses when API fails
       const fallbackResponses = {
+        // Greetings
         'hi': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
         'hello': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
         'habari': "Habari! How can I help you with government services today? Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.",
+        
+        // SHA responses
+        'sha': "SHA (Social Health Authority) registration requires: original ID, KRA PIN, passport photo, and registration fee. You can register online at sha.go.ke or visit any Huduma Centre. Monthly contributions depend on your income level.",
+        'health': "For SHA services, you need: original ID, KRA PIN, passport photo, and registration fee. Register online at sha.go.ke or visit Huduma Centre. The service covers inpatient, outpatient, and chronic illness benefits.",
+        
+        // KRA PIN responses
+        'kra': "KRA PIN registration is free and can be done online at itax.kra.go.ke. You'll need: ID document, email address, and phone number. The process takes about 15 minutes. Keep your PIN safe as it's required for many services.",
+        'pin': "KRA PIN registration is free at itax.kra.go.ke. Requirements: ID, email, phone number. Processing time: 15 minutes. You'll need it for employment, banking, and business registration.",
+        'fees': "KRA PIN registration is completely free. However, if you use a cyber cafe, they may charge a small service fee (usually KES 50-200) for assistance.",
+        
+        // National ID responses
+        'national id': "For National ID application, you'll need: birth certificate, parent's ID copies, passport photos, and KRA PIN. Visit your nearest Huduma Centre with these documents. Processing takes 2-3 weeks.",
+        'id': "National ID requires: birth certificate, parent's IDs, passport photos, KRA PIN. Apply at Huduma Centre. Processing: 2-3 weeks. Cost: free.",
+        
+        // Passport responses
+        'passport': "Passport application requires: original ID, birth certificate, 3 passport photos, KRA PIN, and recommendation letter. Apply online at eCitizen portal then visit immigration offices. Cost varies by type (KES 4,550-12,050).",
+        
+        // Other services
+        'nssf': "NSSF registration requires: ID copy, KRA PIN, and employer details. Register online at nssf.or.ke or visit NSSF offices. Contributions are mandatory for all employees.",
+        'birth certificate': "Birth certificate application requires: birth notification, parent's IDs, and KRA PIN. Apply at civil registration office or Huduma Centre. Processing takes 2-3 weeks.",
+        'driving licence': "Driving licence requires: valid ID, passport photos, eye test certificate, and medical certificate. Apply at NTSA offices after passing both theory and practical tests.",
+        'business': "Business registration can be done online at ecitizen.go.ke. You'll need: ID, KRA PIN, business name approval, and registration fee (KES 1,500 for sole proprietor).",
+        'helb': "HELB loan application requires: ID, KRA PIN, admission letter, bank details, and parent's information. Apply online at helb.co.ke. Applications open twice a year.",
+        'police clearance': "Police clearance certificate requires: original ID, passport photos, KRA PIN, and application fee (KES 1,050). Apply online at ecitizen.go.ke and collect from CID headquarters.",
+        
+        // Default
         'default': "Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi. I'm here to help with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance."
       };
       
       const lowerMessage = message.toLowerCase().trim();
       let fallbackReply = fallbackResponses.default;
       
+      // Check for keyword matches
       for (const key in fallbackResponses) {
         if (key !== 'default' && lowerMessage.includes(key)) {
           fallbackReply = fallbackResponses[key];
@@ -249,9 +277,19 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ reply });
   } catch (error) {
     console.error('API error:', error);
-    // Return a friendly error message instead of technical details
-    return res.status(200).json({
-      reply: "Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi. I'm here to help with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance."
-    });
+    // Enhanced fallback for general errors
+    const lowerMessage = message.toLowerCase().trim();
+    let fallbackReply = "Samahani, kuna tatizo la kiufundi kwa sasa. Tafadhali jaribu tena baada ya muda mfupi. I'm here to help with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.";
+    
+    // Basic keyword matching for common queries
+    if (lowerMessage.includes('sha')) {
+      fallbackReply = "SHA (Social Health Authority) registration requires: original ID, KRA PIN, passport photo, and registration fee. You can register online at sha.go.ke or visit any Huduma Centre.";
+    } else if (lowerMessage.includes('kra') || lowerMessage.includes('pin')) {
+      fallbackReply = "KRA PIN registration is free and can be done online at itax.kra.go.ke. You'll need: ID document, email address, and phone number. The process takes about 15 minutes.";
+    } else if (lowerMessage.includes('national id') || lowerMessage.includes('id')) {
+      fallbackReply = "For National ID application, you'll need: birth certificate, parent's ID copies, passport photos, and KRA PIN. Visit your nearest Huduma Centre with these documents.";
+    }
+    
+    return res.status(200).json({ reply: fallbackReply });
   }
 };

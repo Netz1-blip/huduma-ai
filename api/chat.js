@@ -32,11 +32,16 @@ function loadIndex() {
 }
 
 function loadServiceContent(filePath) {
+  console.log('loadServiceContent called with:', filePath);
   if (cache.services[filePath] && isCacheValid(cache.services[filePath].timestamp)) {
+    console.log('Returning cached content for:', filePath);
     return cache.services[filePath].data;
   }
+  console.log('Reading file from disk:', filePath);
   const raw = fs.readFileSync(filePath, 'utf8');
+  console.log('File read successfully, raw length:', raw.length);
   const trimmed = trimServiceContent(raw);
+  console.log('Content trimmed, final length:', trimmed.length);
   cache.services[filePath] = { data: trimmed, timestamp: Date.now() };
   return trimmed;
 }
@@ -149,13 +154,19 @@ module.exports = async function handler(req, res) {
     // Inject official information ONLY if a service is matched
     if (bestMatch && highestScore > 0) {
       const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
+      console.log('Loading service from:', mdPath);
+      console.log('Best match:', bestMatch.title);
+      
       const serviceContent = loadServiceContent(mdPath);
+      console.log('Service content loaded successfully, length:', serviceContent.length);
+      
       messages.push({
         role: 'user',
         content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
       });
     } else {
       // No service match: just send the user message, let super prompt handle it
+      console.log('No service match, sending message directly to LLM');
       messages.push({ role: 'user', content: message });
     }
 

@@ -1,42 +1,52 @@
 [
   {
     "file": "Service-01-National -ID.md",
+    "title": "National ID",
     "keywords": ["national id", "kitambulisho", "id card", "national identification", "maisha card", "new id", "lost id", "id application", "replace lost id"]
   },
   {
     "file": "Service-02-SHA.md",
+    "title": "SHA (Social Health Authority)",
     "keywords": ["sha", "social health authority", "health insurance", "afya", "bima ya afya", "nhif replacement", "register for sha", "sha registration", "sha benefits"]
   },
   {
     "file": "Service-03-KRA Pin.md",
+    "title": "KRA PIN",
     "keywords": ["kra pin", "kra", "tax pin", "pin certificate", "kra registration", "itax", "how to get kra pin", "kra pin fees"]
   },
   {
     "file": "Service-04-Passport.md",
+    "title": "Passport",
     "keywords": ["passport", "east african passport", "passport application", "passport renewal", "lost passport", "passport fees", "passport requirements"]
   },
   {
     "file": "Service-05-NSSF.md",
+    "title": "NSSF",
     "keywords": ["nssf", "social security", "pension", "nssf contributions", "nssf registration", "nssf benefits", "nssf statement"]
   },
   {
     "file": "Service-06-Birth Certificate.md",
+    "title": "Birth Certificate",
     "keywords": ["birth certificate", "cheti cha kuzaliwa", "birth registration", "newborn registration", "lost birth certificate", "birth certificate fees", "birth certificate requirements"]
   },
   {
     "file": "Service-07-DrivingLicense.md",
+    "title": "Driving Licence",
     "keywords": ["driving licence", "driver license", "leseni ya kuendesha", "dl", "learners licence", "driving test", "driving licence renewal", "lost driving licence"]
   },
   {
     "file": "Service-08-Business Registration.md",
+    "title": "Business Registration",
     "keywords": ["business registration", "company registration", "register a business", "e-citizen business", "certificate of incorporation", "business name registration", "limited company"]
   },
   {
     "file": "Service -09-HELB.md",
+    "title": "HELB",
     "keywords": ["helb", "helb loan", "helb application", "higher education", "helb portal", "helb repayment", "helb status", "helb clearance", "helb funding"]
   },
   {
     "file": "Service-Good Conduct.md",
+    "title": "Police Clearance (Certificate of Good Conduct)",
     "keywords": ["police clearance", "certificate of good conduct", "good conduct", "dci clearance", "criminal record check", "police certificate", "police clearance fees", "how to get police clearance"]
   }
 ]

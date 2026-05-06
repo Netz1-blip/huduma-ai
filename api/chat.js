@@ -4,6 +4,7 @@ const path = require('path');
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
+// Version: 2.0 - Fixed no-match fallback
 
 let cache = { index: { data: null, timestamp: 0 }, services: {} };
 const CACHE_TTL = 5 * 60 * 1000;

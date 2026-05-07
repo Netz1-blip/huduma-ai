@@ -4,38 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#004d40">
-    <title>Huduma AI - Next-Gen Government Services Assistant</title>
+    <title>Huduma AI - Luxury Government Services Assistant</title>
     <link rel="manifest" href="data:application/json,{%22name%22:%22Huduma%20AI%22,%22short_name%22:%22Huduma%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%23ffffff%22,%22theme_color%22:%22%23004d40%22}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ============================================
-           ENHANCED CSS VARIABLES & RESET
+           LUXURY PREMIUM CSS VARIABLES & RESET
            ============================================ */
         :root {
-            /* Original Colors */
-            --primary-green: #004d40;
-            --primary-dark: #00352c;
-            --kenya-black: #000000;
-            --kenya-red: #BB1E10;
-            --kenya-green: #006600;
-            --kenya-white: #ffffff;
+            /* Luxury Rich Colors */
+            --primary-green: #2d5016;
+            --primary-dark: #1a3009;
+            --primary-gold: #f4c430;
+            --primary-gold-light: #fdf5d6;
+            --luxury-purple: #8b5cf6;
+            --luxury-pink: #ec4899;
+            --luxury-blue: #3b82f6;
+            --kenya-black: #0a0a0a;
+            --kenya-red: #dc2626;
+            --kenya-green: #16a34a;
+            --kenya-white: #fafafa;
+            
+            /* Premium Backgrounds */
             --bg-white: #ffffff;
-            --bg-grey: #f9fafb;
-            --chat-bot: #f3f4f6;
-            --chat-user: #dff6ec;
-            --text-primary: #111827;
-            --text-secondary: #6b7280;
-            --border-light: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --bg-grey: #f8fafc;
+            --bg-luxury: linear-gradient(135deg, #2d5016 0%, #1a3009 50%, #f4c430 100%);
+            --bg-gold-accent: linear-gradient(135deg, #f4c430 0%, #fdf5d6 50%, #f4c430 100%);
+            --bg-gradient-warm: linear-gradient(135deg, #2d5016 0%, #f4c430 100%);
+            --bg-gradient-cool: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            
+            /* Chat Colors */
+            --chat-bot: #f1f5f9;
+            --chat-user: linear-gradient(135deg, #2d5016 0%, #16a34a 100%);
+            --chat-luxury: linear-gradient(135deg, #f4c430 0%, #fdf5d6 100%);
+            
+            /* Text Colors */
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-gold: #f4c430;
+            --text-luxury: #8b5cf6;
+            
+            /* Luxury Borders & Shadows */
+            --border-light: #e2e8f0;
+            --border-gold: #f4c430;
+            --border-luxury: #8b5cf6;
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --glow-green: 0 0 20px rgba(0, 77, 64, 0.15);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-gold: 0 0 20px rgba(244, 196, 48, 0.4), 0 0 40px rgba(244, 196, 48, 0.2);
+            --shadow-luxury: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
+            --glow-green: 0 0 30px rgba(45, 80, 22, 0.5);
+            --glow-gold: 0 0 30px rgba(244, 196, 48, 0.5);
             
-            /* Dark Theme Variables */
-            --dark-bg: #1a1a1a;
-            --dark-surface: #2d2d2d;
-            --dark-text: #ffffff;
-            --dark-text-secondary: #a0a0a0;
-            --dark-border: #404040;
+            /* Dark Theme Luxury Variables */
+            --dark-bg: #0a0a0a;
+            --dark-surface: #1a1a1a;
+            --dark-gold: #d4af37;
+            --dark-text: #fafafa;
+            --dark-text-secondary: #a1a1aa;
+            --dark-border: #27272a;
             
             /* Enhanced Spacing */
             --space-xs: 0.25rem;
@@ -44,9 +74,11 @@
             --space-lg: 1.5rem;
             --space-xl: 2rem;
             --space-2xl: 3rem;
+            --space-3xl: 4rem;
             
-            /* Enhanced Typography */
-            --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            /* Luxury Typography */
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-serif: 'Playfair Display', Georgia, serif;
             --text-xs: 0.75rem;
             --text-sm: 0.875rem;
             --text-base: 1rem;
@@ -54,18 +86,21 @@
             --text-xl: 1.25rem;
             --text-2xl: 1.5rem;
             --text-3xl: 2rem;
+            --text-4xl: 2.5rem;
             
-            /* Enhanced Transitions */
-            --transition-fast: 150ms ease;
-            --transition-base: 250ms ease;
-            --transition-slow: 350ms ease;
-            --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            /* Luxury Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-luxury: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             
-            /* Animation Variables */
+            /* Luxury Animation Variables */
             --rotate-loading: 2s linear infinite;
             --pulse-glow: 2s ease-in-out infinite;
-            --slide-up: 0.3s ease-out;
-            --fade-in: 0.5s ease-in;
+            --slide-up: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --fade-in: 0.6s ease-in;
+            --shimmer: 2s ease-in-out infinite;
+            --float: 3s ease-in-out infinite;
         }
 
         /* Dark Theme */
@@ -112,30 +147,32 @@
         }
 
         /* ============================================
-           ENHANCED HEADER WITH CONTROLS
+           LUXURY HEADER WITH GOLD ACCENTS
            ============================================ */
         .header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-light);
-            box-shadow: var(--shadow-sm);
-            transition: all var(--transition-base);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 229, 194, 0.95) 100%);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border-bottom: 2px solid var(--border-gold);
+            box-shadow: var(--shadow-lg), var(--shadow-gold);
+            transition: all var(--transition-luxury);
         }
 
         [data-theme="dark"] .header {
-            background: rgba(45, 45, 45, 0.95);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.98) 0%, rgba(212, 175, 55, 0.2) 100%);
+            border-bottom: 2px solid var(--dark-gold);
         }
 
         .kenya-flag-accent {
             display: flex;
-            height: 4px;
+            height: 6px;
             width: 100%;
             background: linear-gradient(90deg, var(--kenya-black) 33.33%, var(--kenya-red) 33.33%, var(--kenya-red) 66.66%, var(--kenya-green) 66.66%);
             animation: flagWave 3s ease-in-out infinite;
+            box-shadow: var(--shadow-gold);
         }
 
         @keyframes flagWave {
@@ -276,15 +313,15 @@
            ENHANCED WELCOME SECTION
            ============================================ */
         .welcome-section {
-            padding: var(--space-xl) var(--space-lg);
-            background: linear-gradient(135deg, var(--bg-grey), var(--bg-white));
-            border-bottom: 1px solid var(--border-light);
+            padding: var(--space-2xl) var(--space-xl);
+            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(244, 229, 194, 0.1) 50%, var(--bg-white) 100%);
+            border-bottom: 2px solid var(--border-gold);
             position: relative;
             overflow: hidden;
         }
 
         .welcome-content {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             text-align: center;
             position: relative;
@@ -292,11 +329,24 @@
         }
 
         .welcome-title {
-            font-size: var(--text-3xl);
+            font-family: var(--font-serif);
+            font-size: var(--text-4xl);
             font-weight: 700;
-            color: var(--primary-green);
-            margin-bottom: var(--space-md);
-            animation: slideInDown var(--transition-slow);
+            color: var(--text-primary);
+            margin-bottom: var(--space-lg);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-gold) 50%, var(--luxury-purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .welcome-subtitle {
+            font-size: var(--text-xl);
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2xl);
+            line-height: 1.7;
+            font-weight: 400;
         }
 
         @keyframes slideInDown {
@@ -308,13 +358,6 @@
                 opacity: 1;
                 transform: translateY(0);
             }
-        }
-
-        .welcome-subtitle {
-            font-size: var(--text-lg);
-            color: var(--text-secondary);
-            margin-bottom: var(--space-xl);
-            animation: slideInUp var(--transition-slow);
         }
 
         @keyframes slideInUp {
@@ -331,11 +374,46 @@
         /* ============================================
            ENHANCED QUICK ACTIONS
            ============================================ */
-        .quick-actions {
+        .quick-chips {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            gap: var(--space-md);
-            margin-bottom: var(--space-lg);
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-2xl);
+        }
+
+        .quick-chip {
+            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(244, 229, 194, 0.3) 100%);
+            border: 2px solid var(--border-gold);
+            border-radius: 20px;
+            padding: var(--space-xl) var(--space-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-luxury);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-chip::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            transition: left 0.6s;
+        }
+
+        .quick-chip:hover::before {
+            left: 100%;
+        }
+
+        .quick-chip:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl), var(--shadow-gold);
+            border-color: var(--primary-gold);
+            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(212, 175, 55, 0.5) 100%);
         }
 
         .quick-action {
@@ -383,19 +461,16 @@
         }
 
         .quick-action:nth-child(3n) .quick-action-icon {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
         }
 
         .quick-action-label {
             font-size: var(--text-sm);
             font-weight: 600;
             color: var(--text-primary);
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         /* ============================================
@@ -464,6 +539,32 @@
             font-size: var(--text-xs);
             opacity: 0.7;
             margin-left: var(--space-xs);
+        }
+
+        /* ============================================
+           LUXURY APP CONTAINER
+           ============================================ */
+        .app {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl), var(--shadow-gold);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-gold);
+        }
+
+        @media (min-width: 1001px) {
+            .app {
+                min-height: calc(100vh - 2rem);
+                margin: 1rem auto;
+                border-radius: 24px;
+                overflow: hidden;
+                border: 2px solid var(--border-gold);
+            }
         }
 
         /* ============================================
@@ -1118,38 +1219,36 @@
         .history-preview {
             font-size: var(--text-sm);
             overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
 
-        /* ============================================
+/* ============================================
            FLOATING ACTION BUTTONS
            ============================================ */
-        .fab-container {
-            position: fixed;
-            bottom: var(--space-xl);
-            right: var(--space-xl);
-            z-index: 99;
-        }
+.fab-container {
+    position: fixed;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    z-index: 99;
+}
 
-        .fab-main {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-green), var(--kenya-green));
-            border: none;
-            color: white;
-            font-size: var(--text-xl);
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all var(--transition-base);
-            position: relative;
-            z-index: 2;
-        }
+.fab-main {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-green), var(--kenya-green));
+    border: none;
+    color: white;
+    font-size: var(--text-xl);
+    cursor: pointer;
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-base);
+    position: relative;
+    z-index: 2;
+}
 
-        .fab-main:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(0, 77, 64, 0.4);
+.fab-main:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 77, 64, 0.4);
+}
         }
 
         .fab-main.active {
@@ -1420,6 +1519,9 @@
             }
         }
     </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body data-theme="light">
     <!-- Skip to main content for accessibility -->

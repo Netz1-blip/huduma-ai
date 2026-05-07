@@ -14,50 +14,50 @@
            LUXURY PREMIUM CSS VARIABLES & RESET
            ============================================ */
         :root {
-            /* Luxury Rich Colors */
-            --primary-green: #2d5016;
-            --primary-dark: #1a3009;
-            --primary-gold: #f4c430;
-            --primary-gold-light: #fdf5d6;
-            --luxury-purple: #8b5cf6;
-            --luxury-pink: #ec4899;
-            --luxury-blue: #3b82f6;
+            /* Cool Relaxing Colors */
+            --primary-green: #0d7377;
+            --primary-dark: #085f63;
+            --primary-accent: #14a38d;
+            --primary-light: #e8f4f8;
+            --secondary-blue: #4a90e2;
+            --secondary-purple: #6c63ff;
+            --secondary-teal: #26d0ce;
             --kenya-black: #0a0a0a;
             --kenya-red: #dc2626;
-            --kenya-green: #16a34a;
+            --kenya-green: #14a38d;
             --kenya-white: #fafafa;
             
             /* Premium Backgrounds */
             --bg-white: #ffffff;
             --bg-grey: #f8fafc;
-            --bg-luxury: linear-gradient(135deg, #2d5016 0%, #1a3009 50%, #f4c430 100%);
-            --bg-gold-accent: linear-gradient(135deg, #f4c430 0%, #fdf5d6 50%, #f4c430 100%);
-            --bg-gradient-warm: linear-gradient(135deg, #2d5016 0%, #f4c430 100%);
-            --bg-gradient-cool: linear-gradient(135deg, #8b5cf6 0%, #3b82f6 100%);
+            --bg-luxury: linear-gradient(135deg, #0d7377 0%, #085f63 50%, #26d0ce 100%);
+            --bg-accent: linear-gradient(135deg, #14a38d 0%, #e8f4f8 50%, #4a90e2 100%);
+            --bg-gradient-cool: linear-gradient(135deg, #0d7377 0%, #4a90e2 100%);
+            --bg-gradient-teal: linear-gradient(135deg, #26d0ce 0%, #6c63ff 100%);
             
             /* Chat Colors */
             --chat-bot: #f1f5f9;
-            --chat-user: linear-gradient(135deg, #2d5016 0%, #16a34a 100%);
-            --chat-luxury: linear-gradient(135deg, #f4c430 0%, #fdf5d6 100%);
+            --chat-user: linear-gradient(135deg, #0d7377 0%, #14a38d 100%);
+            --chat-accent: linear-gradient(135deg, #26d0ce 0%, #e8f4f8 100%);
             
             /* Text Colors */
             --text-primary: #0f172a;
             --text-secondary: #64748b;
-            --text-gold: #f4c430;
-            --text-luxury: #8b5cf6;
+            --text-accent: #14a38d;
+            --text-cool: #4a90e2;
             
-            /* Luxury Borders & Shadows */
+            /* Cool Borders & Shadows */
             --border-light: #e2e8f0;
-            --border-gold: #f4c430;
-            --border-luxury: #8b5cf6;
+            --border-accent: #14a38d;
+            --border-cool: #4a90e2;
             --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --shadow-gold: 0 0 20px rgba(244, 196, 48, 0.4), 0 0 40px rgba(244, 196, 48, 0.2);
-            --shadow-luxury: 0 0 20px rgba(139, 92, 246, 0.3), 0 0 40px rgba(139, 92, 246, 0.1);
-            --glow-green: 0 0 30px rgba(45, 80, 22, 0.5);
-            --glow-gold: 0 0 30px rgba(244, 196, 48, 0.5);
+            --shadow-accent: 0 0 20px rgba(20, 163, 141, 0.3), 0 0 40px rgba(20, 163, 141, 0.1);
+            --shadow-cool: 0 0 20px rgba(74, 144, 226, 0.3), 0 0 40px rgba(74, 144, 226, 0.1);
+            --glow-primary: 0 0 30px rgba(13, 115, 119, 0.4);
+            --glow-accent: 0 0 30px rgba(38, 208, 206, 0.4);
             
             /* Dark Theme Luxury Variables */
             --dark-bg: #0a0a0a;
@@ -396,8 +396,8 @@
         }
 
         .quick-chip {
-            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(244, 229, 194, 0.3) 100%);
-            border: 2px solid var(--border-gold);
+            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(232, 244, 248, 0.8) 100%);
+            border: 2px solid var(--border-accent);
             border-radius: 20px;
             padding: var(--space-xl) var(--space-lg);
             text-align: center;
@@ -415,7 +415,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(20, 163, 141, 0.2), transparent);
             transition: left 0.6s;
         }
 
@@ -425,9 +425,9 @@
 
         .quick-chip:hover {
             transform: translateY(-8px) scale(1.05);
-            box-shadow: var(--shadow-xl), var(--shadow-gold);
-            border-color: var(--primary-gold);
-            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(212, 175, 55, 0.5) 100%);
+            box-shadow: var(--shadow-xl), var(--shadow-accent);
+            border-color: var(--primary-accent);
+            background: linear-gradient(135deg, var(--bg-white) 0%, rgba(20, 163, 141, 0.3) 100%);
         }
 
         .quick-action {
@@ -1995,6 +1995,13 @@
                     const service = this.dataset.service;
                     document.getElementById('chatInput').value = `Tell me about ${service}`;
                     sendMessage();
+                    // Auto-scroll to chat messages after a short delay
+                    setTimeout(() => {
+                        const chatMessages = document.getElementById('chatMessages');
+                        if (chatMessages) {
+                            chatMessages.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }, 500);
                 });
             });
 
@@ -2004,6 +2011,13 @@
                     const suggestion = this.dataset.suggestion;
                     document.getElementById('chatInput').value = suggestion;
                     sendMessage();
+                    // Auto-scroll to chat messages after a short delay
+                    setTimeout(() => {
+                        const chatMessages = document.getElementById('chatMessages');
+                        if (chatMessages) {
+                            chatMessages.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }, 500);
                 });
             });
 

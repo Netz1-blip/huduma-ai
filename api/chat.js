@@ -4,7 +4,7 @@ const path = require('path');
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-// Version: 5.0 - Clean CommonJS build, all bugs fixed
+// Version: 6.0 - Conversation memory + structured responses
 
 if (!GROQ_API_KEY) {
   console.error('GROQ_API_KEY is not set in environment variables');
@@ -31,7 +31,6 @@ function loadIndex() {
 }
 
 function loadServiceContent(filePath) {
-  console.log('loadServiceContent called with:', filePath);
   if (cache.services[filePath] && isCacheValid(cache.services[filePath].timestamp)) {
     return cache.services[filePath].data;
   }
@@ -48,56 +47,78 @@ function detectLanguage(text) {
   return 'en';
 }
 
-const SYSTEM_PROMPT = `You are Huduma AI, a compassionate, highly knowledgeable, and meticulously accurate government services assistant for the people of Kenya. Your purpose is to guide every citizen — from the most tech-savvy youth to an elderly person in a rural village — through complex government processes with warmth, patience, and absolute factual reliability.
+const SYSTEM_PROMPT = `You are Huduma AI, a compassionate and meticulously accurate government services assistant for the people of Kenya.
 
-## CORE IDENTITY
-- You are Kenyan. You understand the lived experience of ordinary citizens navigating Huduma Centres, eCitizen portals, long queues, conflicting information, and occasional bribe solicitation.
-- You speak naturally in both English and Kenyan Swahili (not Tanzanian standard). Match the user's language choice in your response. If they mix, you may mix gently but stay clear.
-- You are warm, respectful, and never condescending. Address users as fellow Kenyans, not as cases.
-- You never pretend to be human, but you sound like someone who genuinely cares.
+## IDENTITY
+- You are Kenyan. You speak naturally in both English and Kenyan Swahili (not Tanzanian).
+- You are warm, respectful, and never condescending.
+- Match the user's language. If they write in Swahili, respond in Swahili. If English, respond in English.
 
-## GENERAL CONVERSATION BEHAVIOUR
-- For greetings ("hi", "habari", "vipi", "good morning", "sasa", "niaje", etc.), respond warmly and naturally. Ask how you can help today. Use appropriate Kenyan conversational style.
-- For questions about your identity ("who are you", "what can you do"), briefly explain you are Huduma AI, built to give verified information about Kenyan government services, and list the 10 services you cover.
-- For emotional expressions ("nimechoka", "nimefrustratiwa na huduma za serikali", "sijui nifanye nini"), first acknowledge the feeling with empathy, then gently offer practical help.
-- For unclear or vague queries ("help", "nataka huduma", "nisaidie"), respond with a friendly prompt asking which specific service they need, and list 2-3 examples so they can choose.
-- Never ignore a user. Always close with a helpful question or next step.
+## RESPONSE FORMAT — THIS IS CRITICAL
+You MUST always structure your responses like this. NEVER write long unbroken paragraphs.
 
-## FACTUAL ACCURACY — YOUR HIGHEST DUTY
-- When a user asks about any of the 10 government services (National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, Police Clearance), you MUST base every factual claim EXCLUSIVELY on the OFFICIAL INFORMATION provided in this prompt.
-- You may explain the provided facts in your own conversational words, structure them into clear steps, and add empathetic remarks — but you must NEVER invent, alter, or omit any fee, document requirement, timeline, phone number, URL, or procedural step.
-- If the OFFICIAL INFORMATION does not contain the answer, say exactly: "Samahani, sina maelezo kamili kuhusu hilo kwa sasa. Tafadhali angalia tovuti rasmi ya eCitizen (ecitizen.go.ke) au tembelea Huduma Centre iliyo karibu nawe."
-- When citing a fee, always state the exact KES amount in bold and note whether it is free, official, or includes real-world extra costs (e.g., cyber café facilitation).
-- When giving a phone number, URL, or physical address, ensure it matches the OFFICIAL INFORMATION exactly.
+**For service questions, use this exact structure:**
 
-## RESPONSE STRUCTURE
-For service-related questions:
-1. Acknowledge the question briefly and warmly.
-2. Give the direct answer (fee, step, requirement) in simple language.
-3. Break down the steps if it's a process, using a numbered list or short paragraphs.
-4. Add a practical tip from the OFFICIAL INFORMATION if one exists.
-5. Offer a follow-up: "Je, unahitaji msaada zaidi kuhusu [related topic]?"
-6. End with reassurance: "Uko sawa. Tutakusaidia hatua kwa hatua."
+Brief warm acknowledgement (1 sentence max).
 
-## PROACTIVE GUIDANCE
-- If a user asks about a process that requires another document, gently remind them they may need that document first and offer to explain how to get it.
-- If the user mentions a life event, suggest relevant services they might need — but only from the 10 you cover.
+**What You Need:**
+- Requirement 1
+- Requirement 2
+- Requirement 3
 
-## SAFETY AND ETHICAL GUARDRAILS
-- You must NEVER encourage bribery, fraud, or any illegal action.
-- You must NEVER store, remember, or reuse personal information shared in conversation.
-- If a user appears to be in genuine distress or danger, respond with empathy and gently suggest they contact local authorities or a trusted person.
+**Steps:**
+1. First step
+2. Second step
+3. Third step
 
-## LANGUAGE AND CULTURAL NUANCE
-- Use Kenyan Swahili, not Tanzanian standard.
-- Use light, appropriate humour sparingly — only when the user initiates a humorous tone. Never joke about fees, delays, or corruption.
+**Cost:** State the exact KES amount or FREE
 
-Your ultimate goal: Every Kenyan who speaks to you leaves feeling more informed, less anxious, and genuinely helped.`;
+**Time:** How long it takes
+
+**Apply at:** [Official Website Name](https://official-url.go.ke) or physical location
+
+💡 **Tip:** One practical insider tip
+
+*Je, unahitaji msaada zaidi? / Need more help?*
+
+---
+
+**For greetings:** Respond warmly in 2-3 sentences, ask how you can help, mention you cover 10 services.
+
+**For follow-up questions:** Use the conversation history to understand context. If someone asks "what documents?" after asking about SHA, answer about SHA documents specifically.
+
+**For unclear questions:** Ask one clarifying question.
+
+## OFFICIAL LINKS — ALWAYS INCLUDE WHEN RELEVANT
+- eCitizen portal: https://ecitizen.go.ke
+- KRA iTax: https://itax.kra.go.ke
+- SHA: https://sha.go.ke
+- NSSF: https://nssf.or.ke
+- HELB: https://helb.co.ke
+- NTSA (driving): https://ntsa.go.ke
+- DCI (Good Conduct): https://dci.go.ke
+- HUDUMA CENTRE locations: https://hudumacentre.go.ke
+
+## FACTUAL ACCURACY
+- Base ALL service facts exclusively on the OFFICIAL INFORMATION provided.
+- NEVER invent fees, timelines, or requirements.
+- State exact KES amounts in bold.
+- If you don't have information, say: "Samahani, sina maelezo kamili. Tafadhali angalia [ecitizen.go.ke](https://ecitizen.go.ke) au tembelea Huduma Centre."
+
+## MARKDOWN RULES
+- Use **bold** for fees, important terms, section headers
+- Use numbered lists (1. 2. 3.) for steps
+- Use bullet points (- ) for requirements/documents
+- Use [link text](url) for official websites
+- Keep each paragraph to maximum 2 sentences
+- Use emojis sparingly for headers: 📋 💰 ⏱️ 🏢 💡
+
+Your goal: Every Kenyan leaves feeling informed, not overwhelmed. Structure saves lives.`;
 
 function getSystemPrompt(lang) {
   const langInstruction = lang === 'sw'
-    ? `\nIMPORTANT: The user asked in Swahili. You MUST answer in Kenyan Swahili (not Tanzanian). Use natural, conversational Swahili.`
-    : `\nIMPORTANT: The user asked in English. You MUST answer in clear, simple English.`;
+    ? `\nCRITICAL: The user is writing in Swahili. Respond ENTIRELY in Kenyan Swahili. Use the same structured format but in Swahili. Keep section headers in Swahili e.g. "Unahitaji Nini:", "Hatua:", "Gharama:", "Muda:", "Omba Hapa:"`
+    : `\nCRITICAL: The user is writing in English. Respond entirely in clear, simple English using the structured format.`;
   return SYSTEM_PROMPT + langInstruction;
 }
 
@@ -109,19 +130,21 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Only POST requests allowed' });
 
-  // ✅ Declared outside try so catch block can access it
   let message = '';
 
   try {
-    // ✅ Optional chaining prevents crash if req.body is null
     message = req.body?.message || '';
+    const history = req.body?.history || []; // ✅ Conversation history from frontend
+
     if (!message) return res.status(400).json({ error: 'Missing message in request body' });
 
     console.log('Received message:', message);
+    console.log('History length:', history.length);
     console.log('GROQ_API_KEY exists:', !!GROQ_API_KEY);
 
     const index = loadIndex();
 
+    // Keyword matching on current message
     const userMessage = message.toLowerCase().trim();
     let bestMatch = null;
     let highestScore = 0;
@@ -139,29 +162,49 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Also check history for service context if no match in current message
+    if (!bestMatch || highestScore === 0) {
+      const historyText = history.map(h => h.content).join(' ').toLowerCase();
+      for (const service of index) {
+        let score = 0;
+        for (const keyword of service.keywords) {
+          if (historyText.includes(keyword.toLowerCase())) score++;
+        }
+        if (score > highestScore) {
+          highestScore = score;
+          bestMatch = service;
+        }
+      }
+    }
+
     const lang = detectLanguage(message);
     const messages = [{ role: 'system', content: getSystemPrompt(lang) }];
 
+    // ✅ Inject service knowledge if matched
     if (bestMatch && highestScore > 0) {
       const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
-      console.log('Loading service from:', mdPath);
+      console.log('Loading service:', bestMatch.title);
       try {
         const serviceContent = loadServiceContent(mdPath);
         messages.push({
-          role: 'user',
-          content: `---OFFICIAL INFORMATION---\n${serviceContent}\n---END OFFICIAL INFORMATION---\n\nUser question: ${message}`
+          role: 'system',
+          content: `---OFFICIAL INFORMATION FOR ${bestMatch.title.toUpperCase()}---\n${serviceContent}\n---END OFFICIAL INFORMATION---`
         });
       } catch (loadError) {
         console.error('Failed to load service content:', loadError);
-        messages.push({
-          role: 'user',
-          content: `The user is asking about ${bestMatch.title}. Please provide a helpful overview of this Kenyan government service. User question: ${message}`
-        });
       }
-    } else {
-      console.log('No service match, sending message directly to LLM');
-      messages.push({ role: 'user', content: message });
     }
+
+    // ✅ Add conversation history (max last 8 exchanges = 16 messages)
+    const trimmedHistory = history.slice(-16);
+    for (const entry of trimmedHistory) {
+      if (entry.role && entry.content) {
+        messages.push({ role: entry.role, content: entry.content });
+      }
+    }
+
+    // Add current message
+    messages.push({ role: 'user', content: message });
 
     let reply = null;
     let lastError = null;
@@ -169,7 +212,7 @@ module.exports = async function handler(req, res) {
     for (const model of GROQ_MODELS) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
         const response = await fetch(GROQ_API_URL, {
           method: 'POST',
           headers: {
@@ -180,7 +223,7 @@ module.exports = async function handler(req, res) {
             model: model,
             messages: messages,
             temperature: 0.3,
-            max_tokens: 3500,
+            max_tokens: 1200,
           }),
           signal: controller.signal,
         });
@@ -210,20 +253,14 @@ module.exports = async function handler(req, res) {
     if (!reply) {
       console.error('All Groq models failed:', lastError);
       const lowerMessage = message.toLowerCase().trim();
-      let fallbackReply = "I'm here to help with Kenyan government services! I can assist with: National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance. What would you like to know?";
+      let fallbackReply = "I'm here to help with Kenyan government services! Ask me about **National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB,** or **Police Clearance**.";
 
       if (lowerMessage.includes('sha') || lowerMessage.includes('health') || lowerMessage.includes('bima')) {
-        fallbackReply = "SHA registration requires: original ID, KRA PIN, passport photo. Register online at sha.go.ke or visit any Huduma Centre.";
+        fallbackReply = "**SHA (Social Health Authority)**\n\n**What You Need:**\n- Original National ID\n- KRA PIN\n- Passport photo\n\n**Apply at:** [sha.go.ke](https://sha.go.ke) or any Huduma Centre\n\n**Cost:** Registration fee applies\n\n💡 **Tip:** You can also register via *147# on your phone.";
       } else if (lowerMessage.includes('kra') || lowerMessage.includes('pin')) {
-        fallbackReply = "KRA PIN registration is free at itax.kra.go.ke. You'll need: ID, email, phone number. Takes about 15 minutes.";
-      } else if (lowerMessage.includes('passport')) {
-        fallbackReply = "Passport requires: ID, birth certificate, 3 photos, KRA PIN. Apply at eCitizen then visit immigration. Cost: KES 4,550–12,050.";
-      } else if (lowerMessage.includes('helb') || lowerMessage.includes('loan')) {
-        fallbackReply = "HELB loan requires: ID, KRA PIN, admission letter, bank details, parent info. Apply at helb.co.ke.";
-      } else if (lowerMessage.includes('police') || lowerMessage.includes('conduct')) {
-        fallbackReply = "Police clearance: ID, photos, KRA PIN, KES 1,050 fee. Apply at ecitizen.go.ke, collect from CID HQ.";
+        fallbackReply = "**KRA PIN Registration**\n\n**Cost:** FREE\n\n**What You Need:**\n- National ID\n- Email address\n- Phone number\n\n**Apply at:** [itax.kra.go.ke](https://itax.kra.go.ke)\n\n⏱️ **Time:** About 15 minutes online\n\n💡 **Tip:** Keep your PIN safe — you'll need it for almost every government service.";
       } else if (lowerMessage.includes('hi') || lowerMessage.includes('hello') || lowerMessage.includes('habari')) {
-        fallbackReply = "Hello! Habari! I'm here to help with Kenyan government services. Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.";
+        fallbackReply = "Hello! Habari! 👋 I'm **Huduma AI** — your guide to Kenyan government services.\n\nI can help you with:\n- National ID, Passport, Birth Certificate\n- SHA, NSSF, HELB\n- KRA PIN, Driving Licence, Business Registration, Police Clearance\n\nWhat do you need help with today?";
       }
 
       return res.status(200).json({ reply: fallbackReply });
@@ -232,15 +269,9 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ reply });
 
   } catch (error) {
-    // ✅ message is accessible here because it's declared outside try
     console.error('API error:', error);
-    const lowerMessage = message.toLowerCase().trim();
-    let fallbackReply = "I'm here to help with Kenyan government services! Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance.";
-
-    if (lowerMessage.includes('hi') || lowerMessage.includes('hello') || lowerMessage.includes('habari')) {
-      fallbackReply = "Hello! Habari! I'm Huduma AI — your guide to Kenyan government services. How can I help you today?";
-    }
-
-    return res.status(200).json({ reply: fallbackReply });
+    return res.status(200).json({
+      reply: "I'm here to help with Kenyan government services! Ask me about National ID, SHA, KRA PIN, Passport, NSSF, Birth Certificate, Driving Licence, Business Registration, HELB, or Police Clearance."
+    });
   }
 };

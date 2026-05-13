@@ -1,8 +1,7 @@
 {
   "functions": {
     "api/chat.js": {
-      "includeFiles": "services/**/*.md",
-      "excludeFiles": ""
+      "includeFiles": "services/**"
     }
   }
 }

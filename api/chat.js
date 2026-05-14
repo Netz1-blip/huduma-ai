@@ -4,7 +4,7 @@ const path = require('path');
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant'];
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-// Version: 6.0 - Conversation memory + structured responses
+// Version: 7.0 - Strict RAG gating (off-topic rejection + KB-only grounding)
 
 if (!GROQ_API_KEY) {
   console.error('GROQ_API_KEY is not set in environment variables');
@@ -47,12 +47,39 @@ function detectLanguage(text) {
   return 'en';
 }
 
+// ─── CHANGE 1: Greeting detection ────────────────────────────────────────────
+// Purpose: Greetings must pass through even with no KB match.
+// Without this, "hello" would get rejected by the off-topic gate below.
+const GREETING_PATTERNS = [
+  /^(hi|hello|hey|hola|howdy)\b/i,
+  /^(habari|jambo|sasa|mambo|niaje|hujambo)\b/i,
+  /^good\s?(morning|afternoon|evening|night)/i,
+  /^(thanks?|thank you|asante|nashukuru)\b/i,
+  /^(what('s| is) (huduma|this|your name|your purpose))/i,
+  /^(who are you|what can you do|what do you help with)/i,
+  /^(okay|ok|sure|got it|understood|noted)\s*$/i,
+  /^(help|start|begin)\s*$/i,
+];
+
+function isGreeting(message) {
+  const trimmed = message.trim();
+  return GREETING_PATTERNS.some(p => p.test(trimmed));
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 const SYSTEM_PROMPT = `You are Huduma AI, a compassionate and meticulously accurate government services assistant for the people of Kenya.
 
 ## IDENTITY
 - You are Kenyan. You speak naturally in both English and Kenyan Swahili (not Tanzanian).
 - You are warm, respectful, and never condescending.
 - Match the user's language. If they write in Swahili, respond in Swahili. If English, respond in English.
+
+## STRICT KNOWLEDGE RULE — THIS IS YOUR MOST IMPORTANT RULE
+- You ONLY answer using facts from the OFFICIAL INFORMATION section provided to you.
+- You have NO knowledge of your own. Your training data does not exist for this task.
+- If no OFFICIAL INFORMATION section is present, do NOT answer service-specific questions. Tell the user politely that you can only assist with the 10 listed Kenyan government services.
+- NEVER invent, guess, or recall fees, timelines, requirements, or procedures from memory.
+- If a detail is missing from the OFFICIAL INFORMATION, say: "Samahani, sina maelezo kamili. Tafadhali angalia [ecitizen.go.ke](https://ecitizen.go.ke) au tembelea Huduma Centre."
 
 ## RESPONSE FORMAT — THIS IS CRITICAL
 You MUST always structure your responses like this. NEVER write long unbroken paragraphs.
@@ -99,12 +126,6 @@ Brief warm acknowledgement (1 sentence max).
 - DCI (Good Conduct): https://dci.go.ke
 - HUDUMA CENTRE locations: https://hudumacentre.go.ke
 
-## FACTUAL ACCURACY
-- Base ALL service facts exclusively on the OFFICIAL INFORMATION provided.
-- NEVER invent fees, timelines, or requirements.
-- State exact KES amounts in bold.
-- If you don't have information, say: "Samahani, sina maelezo kamili. Tafadhali angalia [ecitizen.go.ke](https://ecitizen.go.ke) au tembelea Huduma Centre."
-
 ## MARKDOWN RULES
 - Use **bold** for fees, important terms, section headers
 - Use numbered lists (1. 2. 3.) for steps
@@ -117,8 +138,8 @@ Your goal: Every Kenyan leaves feeling informed, not overwhelmed. Structure save
 
 function getSystemPrompt(lang) {
   const langInstruction = lang === 'sw'
-    ? `\nCRITICAL: The user is writing in Swahili. Respond ENTIRELY in Kenyan Swahili. Use the same structured format but in Swahili. Keep section headers in Swahili e.g. "Unahitaji Nini:", "Hatua:", "Gharama:", "Muda:", "Omba Hapa:"`
-    : `\nCRITICAL: The user is writing in English. Respond entirely in clear, simple English using the structured format.`;
+    ? '\nCRITICAL: The user is writing in Swahili. Respond ENTIRELY in Kenyan Swahili. Use the same structured format but in Swahili. Keep section headers in Swahili e.g. "Unahitaji Nini:", "Hatua:", "Gharama:", "Muda:", "Omba Hapa:"'
+    : '\nCRITICAL: The user is writing in English. Respond entirely in clear, simple English using the structured format.';
   return SYSTEM_PROMPT + langInstruction;
 }
 
@@ -134,7 +155,7 @@ module.exports = async function handler(req, res) {
 
   try {
     message = req.body?.message || '';
-    const history = req.body?.history || []; // ✅ Conversation history from frontend
+    const history = req.body?.history || [];
 
     if (!message) return res.status(400).json({ error: 'Missing message in request body' });
 
@@ -177,10 +198,23 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // ─── CHANGE 2: Off-topic gate ─────────────────────────────────────────────
+    // Purpose: If nothing matched (not even from history) AND it's not a greeting,
+    // reject immediately. Never call Groq. This is what makes it true RAG.
+    if (highestScore === 0 && !isGreeting(message)) {
+      const lang = detectLanguage(message);
+      const refusal = lang === 'sw'
+        ? 'Samahani, siwezi kusaidia na swali hilo. 🙏\n\nMimi ni **Huduma AI** — nimejengwa kusaidia na huduma 10 za serikali ya Kenya pekee:\n\n- 🪪 Kitambulisho cha Taifa (National ID)\n- 🛂 Pasipoti\n- 📄 Cheti cha Kuzaliwa\n- 🏥 SHA (Bima ya Afya)\n- 💰 NSSF (Pensheni)\n- 🧾 KRA PIN\n- 🚗 Leseni ya Udereva\n- 🏢 Usajili wa Biashara\n- 🎓 HELB (Mkopo wa Masomo)\n- ✅ Cheti cha Mwenendo Mzuri\n\nTafadhali niulize kuhusu moja ya huduma hizi!'
+        : 'Sorry, I can\'t help with that. 🙏\n\nI\'m **Huduma AI** — I\'m built specifically for these 10 Kenyan government services:\n\n- 🪪 National ID\n- 🛂 Passport\n- 📄 Birth Certificate\n- 🏥 SHA Health Insurance\n- 💰 NSSF Pension\n- 🧾 KRA PIN\n- 🚗 Driving Licence\n- 🏢 Business Registration\n- 🎓 HELB Student Loan\n- ✅ Certificate of Good Conduct\n\nPlease ask me about any of these and I\'ll be happy to help!';
+
+      return res.status(200).json({ reply: refusal });
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
     const lang = detectLanguage(message);
     const messages = [{ role: 'system', content: getSystemPrompt(lang) }];
 
-    // ✅ Inject service knowledge if matched
+    // Inject service knowledge if matched
     if (bestMatch && highestScore > 0) {
       const mdPath = path.join(process.cwd(), 'services', bestMatch.file);
       console.log('Loading service:', bestMatch.title);
@@ -195,7 +229,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // ✅ Add conversation history (max last 8 exchanges = 16 messages)
+    // Add conversation history (max last 8 exchanges = 16 messages)
     const trimmedHistory = history.slice(-16);
     for (const entry of trimmedHistory) {
       if (entry.role && entry.content) {
